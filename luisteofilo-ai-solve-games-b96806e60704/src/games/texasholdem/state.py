@@ -1,9 +1,9 @@
-from games.poker.action import KuhnPokerAction
-from games.poker.card import KuhnPokerCard
+from games.texasholdem.action import TexasAction
+from games.texasholdem.card import TexasCard
 from games.state import State
 
 
-class KuhnPokerState(State):
+class TexasState(State):
 
     def __init__(self):
         super().__init__()
@@ -44,19 +44,19 @@ class KuhnPokerState(State):
         if len(self.__sequence) > 0:
             last_action = self.__sequence[-1]
 
-            if last_action == KuhnPokerAction.BET:
+            if last_action == TexasAction.BET:
                 self.__is_finished = True
-                if action == KuhnPokerAction.BET:
+                if action == TexasAction.BET:
                     self.__is_showdown = True
             else:
-                if action == KuhnPokerAction.PASS:
+                if action == TexasAction.PASS:
                     self.__is_finished = True
                     self.__is_showdown = True
 
         self.__sequence.append(action)
 
         # if someone is betting, we are going to increase its bet amount
-        if action == KuhnPokerAction.BET:
+        if action == TexasAction.BET:
             self.__bets[self.__acting_player] += 1
 
         # swap the player
@@ -64,7 +64,7 @@ class KuhnPokerState(State):
 
     def display(self):
         for action in self.__sequence:
-            print('b' if action == KuhnPokerAction.BET else 'p', end="")
+            print('b' if action == TexasAction.BET else 'p', end="")
         print(f": pot = {self.get_pot()}")
 
     """
@@ -80,7 +80,7 @@ class KuhnPokerState(State):
         return self.__acting_player
 
     def clone(self):
-        cloned = KuhnPokerState()
+        cloned = TexasState()
         cloned.__bets = self.__bets.copy()
         cloned.__sequence = self.__sequence.copy()
         cloned.__is_finished = self.__is_finished
@@ -118,7 +118,7 @@ class KuhnPokerState(State):
     """
     a player in position pos reveices a card 
     """
-    def draw_card(self, pos, card: KuhnPokerCard):
+    def draw_card(self, pos, card: TexasCard):
         # noinspection PyTypeChecker
         self.__cards[pos] = card
 

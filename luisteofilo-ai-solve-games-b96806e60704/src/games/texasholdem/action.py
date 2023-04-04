@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class KuhnPokerAction(Enum):
+class TexasAction(Enum):
     """
     a kuhn poker action is simple - pass or bet
     a pass is either a check (no money is in the table) or a fold (if there is a bet)

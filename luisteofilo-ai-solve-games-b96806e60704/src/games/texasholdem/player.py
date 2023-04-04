@@ -1,10 +1,10 @@
 from abc import ABC
 
 from games.player import Player
-from games.poker.card import KuhnPokerCard
+from games.texasholdem.card import TexasCard
 
 
-class KuhnPokerPlayer(Player, ABC):
+class TexasPlayer(Player, ABC):
 
     def __init__(self, name):
         super().__init__(name)
@@ -22,12 +22,12 @@ class KuhnPokerPlayer(Player, ABC):
         """
         we also need to store the current card we are holding
         """
-        self.__current_card = KuhnPokerCard.Jack
+        self.__current_card = TexasCard.Jack
 
     """
     assigns a card to the player
     """
-    def set_current_card(self, card: KuhnPokerCard):
+    def set_current_card(self, card: TexasCard):
         self.__current_card = card
 
     """

@@ -1,21 +1,21 @@
-from games.poker.action import KuhnPokerAction
-from games.poker.player import KuhnPokerPlayer
-from games.poker.state import KuhnPokerState
+from games.texasholdem.action import TexasAction
+from games.texasholdem.player import TexasPlayer
+from games.texasholdem.state import TexasState
 from games.state import State
 
 
-class HumanKuhnPokerPlayer(KuhnPokerPlayer):
+class HumanTexasPlayer(TexasPlayer):
 
     def __init__(self, name):
         super().__init__(name)
 
-    def get_action(self, state: KuhnPokerState):
+    def get_action(self, state: TexasState):
         state.display()
         return {
-            "b":    KuhnPokerAction.BET,
-            "bet":  KuhnPokerAction.BET,
-            "p":    KuhnPokerAction.PASS,
-            "pass": KuhnPokerAction.PASS
+            "b":    TexasAction.BET,
+            "bet":  TexasAction.BET,
+            "p":    TexasAction.PASS,
+            "pass": TexasAction.PASS
         }.get(input("Choose an action (pass/p or bet/b): "))
 
     def event_action(self, pos: int, action, new_state: State):

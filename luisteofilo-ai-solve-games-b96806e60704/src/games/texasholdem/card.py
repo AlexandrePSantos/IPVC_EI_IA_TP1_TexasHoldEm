@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class KuhnPokerCard(Enum):
+class TexasCard(Enum):
     """
     kuhn poker is played with 3 cards with no suits
     """
