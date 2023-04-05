@@ -20,21 +20,22 @@ class TexasPlayer(Player, ABC):
         self.__num_games = 0
 
         """
-        we also need to store the current card we are holding
+        we also need to store the current cards we are holding
+        Passa a ser um array bidimensional com carta e naipe
         """
-        self.__current_card = TexasCard.Jack
+        self.__current_hand = TexasCard.Jack
 
     """
     assigns a card to the player
     """
-    def set_current_card(self, card: TexasCard):
-        self.__current_card = card
+    def set_current_hand(self, card: TexasCard):
+        self.__current_hand = card
 
     """
     gets the current player's card
     """
-    def get_current_card(self):
-        return self.__current_card
+    def get_current_hand(self):
+        return self.__current_hand
 
     """
     gets the score
