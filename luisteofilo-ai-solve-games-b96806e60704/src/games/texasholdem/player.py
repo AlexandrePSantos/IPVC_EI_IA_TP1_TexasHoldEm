@@ -1,5 +1,5 @@
 from abc import ABC
-
+from typing import List
 from games.player import Player
 from games.texasholdem.card import TexasCard
 
@@ -21,15 +21,14 @@ class TexasPlayer(Player, ABC):
 
         """
         we also need to store the current cards we are holding
-        Passa a ser um array bidimensional com carta e naipe
         """
-        self.__current_hand = TexasCard.Jack
+        self.__current_hand = []
 
     """
     assigns a card to the player
     """
-    def set_current_hand(self, card: TexasCard):
-        self.__current_hand = card
+    def set_current_hand(self, cards: List[TexasCard]):
+        self.__current_hand = cards
 
     """
     gets the current player's card
@@ -57,4 +56,5 @@ class TexasPlayer(Player, ABC):
             self.__score += result
 
     def print_stats(self):
-        print(f"Player {self.get_name()} | Total profit: ${self.__score} | Profit per game: ${self.get_expected_value()}")
+        print(f"Player {self.get_name()} | Total profit: ${self.__score} "
+              f"| Profit per game: ${self.get_expected_value()}")
