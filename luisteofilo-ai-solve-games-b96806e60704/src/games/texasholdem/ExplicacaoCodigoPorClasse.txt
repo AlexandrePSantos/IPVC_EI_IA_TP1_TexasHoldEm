@@ -1,0 +1,30 @@
+card.py:
+
+--> EN <--
+This code defines an Enum class named TexasCard, which represents a standard deck of cards for Texas Hold'em poker. The class has 52 members, 
+each representing a unique card in the deck. Each card is identified by a value between 0 and 51, which is stored in the value attribute of each member.
+
+The TexasCard class defines two methods:
+->>    __lt__(self, other): This method is used to define the less-than comparison between two TexasCard instances. 
+    It compares the value attributes of the two instances to determine which one is less than the other.
+->>    __str__(self): This method returns a string representation of the TexasCard instance, which consists of the rank and suit of the card. 
+    The rank is determined by the rank_names dictionary, which maps the card's value modulo 13 to a rank name ("2" through "A"). 
+    The suit is determined by the suit_names dictionary, which maps the card's value integer divided by 13 to a suit name ("hearts", "diamonds", "clubs", "spades"). 
+    The rank and suit are concatenated to form the string representation of the card.
+----\\----
+----\\----
+
+--> PT <--
+Este código define uma classe Enum chamada TexasCard, que representa um baralho padrão de cartas para o jogo de poker Texas Hold'em. 
+A classe tem 52 elementos, cada um representando uma carta única do baralho. Cada carta é identificada por um valor entre 0 e 51, que é armazenado no atributo de valor de cada elemento.
+
+A classe TexasCard define dois métodos:
+
+->>     __lt__(self, other): Este método é usado para definir a comparação de menor-que entre duas instâncias de TexasCard. 
+    Ele compara os atributos de valor das duas instâncias para determinar qual é menor que a outra.
+->>     __str__(self): Este método retorna uma representação em string da instância de TexasCard, que consiste no valor e no naipe da carta. 
+    O valor é determinado pelo dicionário rank_names, que mapeia o valor da carta módulo 13 para um nome de valor ("2" a "A"). 
+    O naipe é determinado pelo dicionário suit_names, que mapeia o valor inteiro da carta dividido por 13 para um nome de naipe ("copas", "ouros", "paus", "espadas"). 
+    O valor e o naipe são concatenados para formar a representação em string da carta.
+----\\----
+----\\----
