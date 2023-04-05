@@ -2,5 +2,7 @@ from enum import Enum
 
 
 class TexasAction(Enum):
-    PASS = 0,
-    BET = 1
+    FOLD = 0
+    CHECK = 1
+    CALL = 2
+    RAISE = 3

@@ -127,3 +127,4 @@ class TexasState(State):
 
     def get_sequence(self):
         return self.__sequence
+

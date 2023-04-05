@@ -1,18 +1,28 @@
 -------------------action.py:
 
 --> EN <--
+Contains an Enum class named TexasAction, which represents the possible actions for Texas Hold'em poker.
 
+FOLD represents the action of folding the hand.
+CHECK represents the action of not betting.
+CALL represents the action of matching the opponent's bet.
+RAISE represents the action of increasing the bet.
 ----\\----
 
 --> PT <--
+Contem uma class Enum TexasAction, que representa as possiveis jogadas para um jogo de Texas Hold'em poker.
 
+FOLD representa a ação de desistir da mão.
+CHECK representa a ação de não apostar.
+CALL representa a ação de igualar a aposta do adversário.
+RAISE representa a ação de aumentar a aposta.
 ----\\----
 ----\\----
 
 -------------------card.py:
 
 --> EN <--
-This code defines an Enum class named TexasCard, which represents a standard deck of cards for Texas Hold'em poker. The class has 52 members, 
+Contains an Enum class named TexasCard, which represents a standard deck of cards for Texas Hold'em poker. The class has 52 members,
 each representing a unique card in the deck. Each card is identified by a value between 0 and 51, which is stored in the value attribute of each member.
 
 The TexasCard class defines two methods:
@@ -25,7 +35,7 @@ The TexasCard class defines two methods:
 ----\\----
 
 --> PT <--
-Este código define uma classe Enum chamada TexasCard, que representa um baralho padrão de cartas para o jogo de poker Texas Hold'em. 
+Contem uma classe Enum chamada TexasCard, que representa um baralho padrão de cartas para o jogo de poker Texas Hold'em.
 A classe tem 52 elementos, cada um representando uma carta única do baralho. Cada carta é identificada por um valor entre 0 e 51, que é armazenado no atributo de valor de cada elemento.
 
 A classe TexasCard define dois métodos:
@@ -42,11 +52,21 @@ A classe TexasCard define dois métodos:
 -------------------player.py:
 
 --> EN <--
+Contains a class named TexasPlayer which inherits from the abstract base class Player and from the abstract base class ABC. It also imports the List and TexasCard types from other modules.
 
+The TexasPlayer class has an initializer (__init__ method) that sets the name of the player and initializes the private instance variables __score, __num_games, and __current_hand.
+The class has methods for setting and getting the current hand of the player, getting the score of the player, getting the expected value of the player, and printing the statistics of the player.
+The event_new_game method increments the number of games for the player when a new game starts, and the event_result method updates the score of the player when a game ends.
+Finally, the print_stats method prints the name of the player, the total profit earned or lost by the player, and the profit per game for the player in a formatted string.
 ----\\----
 
 --> PT <--
+Contem uma class chamada TexasPlayer que herda da classe abstrata base Player e da classe abstrata base ABC. Ela também importa os tipos List e TexasCard de outros módulos.
 
+A classe TexasPlayer tem um inicializador (init método) que define o nome do jogador e inicializa as variáveis de instância privadas __score, __num_games e __current_hand.
+A classe tem métodos para definir e obter a mão atual do jogador, obter a pontuação do jogador, obter o valor esperado do jogador e imprimir as estatísticas do jogador.
+O método event_new_game incrementa o número de jogos para o jogador quando um novo jogo começa, e o método event_result atualiza a pontuação do jogador quando um jogo termina.
+Por fim, o método print_stats imprime o nome do jogador, o lucro total obtido ou perdido pelo jogador e o lucro por jogo para o jogador em uma string formatada.
 ----\\----
 ----\\----
 
