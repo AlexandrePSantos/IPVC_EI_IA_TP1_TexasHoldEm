@@ -111,3 +111,422 @@ O método end_game() é chamado quando o jogo termina e é ignorado neste simula
 
 ----\\----
 ----\\----
+
+action.py:
+
+from enum import Enum
+
+
+class TexasAction(Enum):
+    FOLD = 0
+    CHECK = 1
+    CALL = 2
+    RAISE = 3
+
+card.py:
+
+from enum import Enum
+
+
+class TexasCard(Enum):
+    """
+    A standard deck of cards for Texas Hold'em poker
+    """
+    TwoOfHearts = 0
+    ThreeOfHearts = 1
+    FourOfHearts = 2
+    FiveOfHearts = 3
+    SixOfHearts = 4
+    SevenOfHearts = 5
+    EightOfHearts = 6
+    NineOfHearts = 7
+    TenOfHearts = 8
+    JackOfHearts = 9
+    QueenOfHearts = 10
+    KingOfHearts = 11
+    AceOfHearts = 12
+    TwoOfDiamonds = 13
+    ThreeOfDiamonds = 14
+    FourOfDiamonds = 15
+    FiveOfDiamonds = 16
+    SixOfDiamonds = 17
+    SevenOfDiamonds = 18
+    EightOfDiamonds = 19
+    NineOfDiamonds = 20
+    TenOfDiamonds = 21
+    JackOfDiamonds = 22
+    QueenOfDiamonds = 23
+    KingOfDiamonds = 24
+    AceOfDiamonds = 25
+    TwoOfClubs = 26
+    ThreeOfClubs = 27
+    FourOfClubs = 28
+    FiveOfClubs = 29
+    SixOfClubs = 30
+    SevenOfClubs = 31
+    EightOfClubs = 32
+    NineOfClubs = 33
+    TenOfClubs = 34
+    JackOfClubs = 35
+    QueenOfClubs = 36
+    KingOfClubs = 37
+    AceOfClubs = 38
+    TwoOfSpades = 39
+    ThreeOfSpades = 40
+    FourOfSpades = 41
+    FiveOfSpades = 42
+    SixOfSpades = 43
+    SevenOfSpades = 44
+    EightOfSpades = 45
+    NineOfSpades = 46
+    TenOfSpades = 47
+    JackOfSpades = 48
+    QueenOfSpades = 49
+    KingOfSpades = 50
+    AceOfSpades = 51
+
+    def __lt__(self, other):
+        if self.__class__ is other.__class__:
+            return self.value < other.value
+
+    def __str__(self):
+        rank_names = {
+            0: "2",
+            1: "3",
+            2: "4",
+            3: "5",
+            4: "6",
+            5: "7",
+            6: "8",
+            7: "9",
+            8: "10",
+            9: "J",
+            10: "Q",
+            11: "K",
+            12: "A"
+        }
+        suit_names = {
+            0: "hearts",
+            1: "diamonds",
+            2: "clubs",
+            3: "spades"
+        }
+        rank = rank_names[self.value % 13]
+        suit = suit_names[self.value // 13]
+        return rank + suit
+
+
+"""
+   # kuhn poker is played with 3 cards with no suits
+
+    Jack = 0
+    Queen = 1
+    King = 2
+
+    def __lt__(self, other):
+        if self.__class__ is other.__class__:
+            return self.value < other.value
+
+    def __str__(self):
+        return {
+            0: "J",
+            1: "Q",
+            2: "K"
+        }[self.value]
+"""
+
+player.py:
+
+from abc import ABC
+from typing import List
+from games.player import Player
+from games.texasholdem.card import TexasCard
+
+
+class TexasPlayer(Player, ABC):
+
+    def __init__(self, name):
+        super().__init__(name)
+
+        """
+        score will store the money earned (or lost)
+        """
+        self.__score = 0
+
+        """
+        here we are storing the number of games
+        """
+        self.__num_games = 0
+
+        """
+        we also need to store the current cards we are holding
+        """
+        self.__current_hand = []
+
+    """
+    assigns a card to the player
+    """
+    def set_current_hand(self, cards: List[TexasCard]):
+        self.__current_hand = cards
+
+    """
+    gets the current player's card
+    """
+    def get_current_hand(self):
+        return self.__current_hand
+
+    """
+    gets the score
+    """
+    def get_score(self):
+        return self.__score
+
+    """
+    gets the score
+    """
+    def get_expected_value(self):
+        return self.__score * 1.0 / self.__num_games
+
+    def event_new_game(self):
+        self.__num_games += 1
+
+    def event_result(self, pos: int, result: int):
+        if pos == self.get_current_pos():
+            self.__score += result
+
+    def print_stats(self):
+        print(f"Player {self.get_name()} | Total profit: ${self.__score} "
+              f"| Profit per game: ${self.get_expected_value()}")
+
+simulator.py:
+
+from random import shuffle
+
+from games.game_simulator import GameSimulator
+from games.texasholdem.card import TexasCard
+from games.texasholdem.player import TexasPlayer
+from games.texasholdem.state import TexasState
+
+
+class TexasSimulator(GameSimulator):
+
+    def __init__(self, player1: TexasPlayer, player2: TexasPlayer):
+        super().__init__([player1, player2])
+        """
+        deck of cards
+        """
+        deck = list(TexasCard)
+        self.__deck = deck
+        self.state = TexasState()
+
+    def init_game(self):
+        # shuffle the deck
+        shuffle(self.__deck)
+
+        # assign two cards to each player
+        positions = self.get_player_positions()
+        for player in positions:
+            cards = self.__deck[:2]
+            player.set_current_cards(cards)
+            self.__deck = self.__deck[2:]
+
+        # assign three community cards
+        for i in range(3):
+            self.state.add_community_card(self.__deck.pop())
+
+        return self.state
+
+    def before_end_game(self, state: TexasState):
+        # reveal all the cards when the game is over, one player folds, or last round of betting
+        if state.is_game_over() or state.get_active_players() == 1 or state.get_current_betting_round() == 4:
+            for pos in range(self.num_players()):
+                state.draw_card(pos, self.__deck[pos])
+
+    def end_game(self, state: TexasState):
+        # ignored for this simulator
+        pass
+
+state.py:
+
+from games.texasholdem.action import TexasAction
+from games.texasholdem.card import TexasCard
+from games.state import State
+
+
+class TexasState(State):
+
+    def __init__(self):
+        super().__init__()
+        self.__sequence = []
+        self.__acting_player = 0
+        self.__is_finished = False
+        self.__cards = [None, None]
+        self.__bets = [0, 0]  # change initial bets to 0
+        self.__is_showdown = False
+        self.__community_cards = []
+
+    def get_num_players(self):
+        return 2
+
+    def get_valid_actions(self):
+        if self.__is_finished:
+            return []
+
+        if len(self.__sequence) == 0:
+            return [TexasAction.BET]
+
+        last_action = self.__sequence[-1]
+
+        if last_action == TexasAction.BET:
+            return [TexasAction.BET, TexasAction.PASS]
+        else:
+            return [TexasAction.BET]
+
+    def validate_action(self, action) -> bool:
+        if self.__is_finished:
+            return False
+        if action == TexasAction.BET:
+            # check if the current player has enough chips to bet
+            current_player_chips = self.get_chips(self.__acting_player)
+            return self.__bets[self.__acting_player] < current_player_chips
+        return True
+
+    def update(self, action):
+        if len(self.__sequence) > 0:
+            last_action = self.__sequence[-1]
+
+            if last_action == TexasAction.BET:
+                self.__is_finished = True
+                if action == TexasAction.BET:
+                    self.__is_showdown = True
+            else:
+                if action == TexasAction.PASS:
+                    self.__is_finished = True
+                    self.__is_showdown = True
+
+        self.__sequence.append(action)
+
+        if action == TexasAction.BET:
+            current_bet = self.__bets[self.__acting_player]
+            current_player_chips = self.get_chips(self.__acting_player)
+            # increase bet by minimum of 1 and remaining chips
+            self.__bets[self.__acting_player] += min(current_player_chips - current_bet, 1)
+
+        self.__acting_player = 1 if self.__acting_player == 0 else 0
+
+    def display(self):
+        for action in self.__sequence:
+            print('b' if action == TexasAction.BET else 'p', end="")
+        print(f": pot = {self.get_pot()}")
+
+    def add_community_card(self, card: TexasCard):
+        self.__community_cards.append(card)
+
+    def get_pot(self):
+        return sum(self.__bets)
+
+    def is_finished(self) -> bool:
+        return self.__is_finished
+
+    def get_acting_player(self) -> int:
+        return self.__acting_player
+
+    def clone(self):
+        cloned = TexasState()
+        cloned.__bets = self.__bets.copy()
+        cloned.__sequence = self.__sequence.copy()
+        cloned.__is_finished = self.__is_finished
+        cloned.__acting_player = self.__acting_player
+        cloned.__cards = [card.clone() if card is not None else None for card in self.__cards]
+        cloned.__is_showdown = self.__is_showdown
+        return cloned
+
+    def get_result(self, pos):
+        if not self.__is_finished:
+            return None
+
+        if self.__is_showdown:
+            for card in self.__cards:
+                if card is None:
+                    return None
+
+            opp_pos = 1 if pos == 0 else 0
+            player_cards = [self.__cards[pos], self.__cards[2+pos]]
+            opp_cards = [self.__cards[opp_pos], self.__cards[2+opp_pos]]
+
+            player_hand_strength = self.get_hand_strength(player_cards)
+            opp_hand_strength = self.get_hand_strength(opp_cards)
+
+            if player_hand_strength > opp_hand_strength:
+                return self.get_pot()
+            elif player_hand_strength < opp_hand_strength:
+                return -self.get_pot()
+            else:
+                return
+
+    def before_results(self):
+        pass
+
+human.py:
+
+from games.texasholdem.action import TexasAction
+from games.texasholdem.player import TexasPlayer
+from games.texasholdem.state import TexasState
+from games.state import State
+
+
+class HumanTexasPlayer(TexasPlayer):
+
+    def __init__(self, name):
+        super().__init__(name)
+        self.current_card = None
+
+    def set_current_card(self, card):
+        self.current_card = card
+
+    def get_current_card(self):
+        return self.current_card
+
+    def set_current_cards(self, cards):
+        self.current_cards = cards
+
+    def get_action(self, state: TexasState):
+        state.display()
+        valid_actions = state.get_valid_actions()
+        while True:
+            action_str = input("Choose an action (fold/f, check/c, call, raise/r): ")
+            if action_str in ["fold", "f"]:
+                return TexasAction.FOLD
+            elif action_str in ["check", "c"]:
+                return TexasAction.CHECK
+            elif action_str == "call":
+                return TexasAction.CALL
+            elif action_str in ["raise", "r"]:
+                bet = input("Enter the amount you want to raise: ")
+                try:
+                    bet = int(bet)
+                    if bet < state.current_bet:
+                        print(f"The bet must be at least {state.current_bet}")
+                    elif bet > self.chips:
+                        print("You don't have enough chips to make that bet")
+                    else:
+                        return TexasAction.BET, bet
+                except ValueError:
+                    print("Invalid bet amount. Please enter a number.")
+            else:
+                print("Invalid action. Please choose one of the valid actions:")
+                print([action.value for action in valid_actions])
+
+    def event_action(self, pos: int, action, new_state: State):
+        print(f"> player {pos} {action}")
+
+    def event_end_game(self, final_state: State):
+        pass
+
+    def event_result(self, pos: int, result: int):
+        print(f"> player {pos} got ${result}")
+
+    def event_new_game(self):
+        print("--- New game ---")
+        print(f"> You are player {self.get_current_pos()} with card {self.get_current_card()}")
+
