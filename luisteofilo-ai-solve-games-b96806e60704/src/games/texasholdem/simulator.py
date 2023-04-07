@@ -13,8 +13,8 @@ class TexasSimulator(GameSimulator):
         """
         deck of cards
         """
-        deck = TexasCard()
-        self.__deck = deck.get_cards()
+        deck = list(TexasCard)
+        self.__deck = deck
         # self.__deck = [TexasCard.Jack, TexasCard.Queen, TexasCard.King]
 
     def init_game(self):
@@ -45,7 +45,7 @@ class TexasSimulator(GameSimulator):
             for pos in range(self.num_players()):
                 state.draw_card(pos, self.__deck[pos])
 
-        # if we reached the show down, we are going to reveal the cards to all players
+        # if we reached the showdown, we are going to reveal the cards to all players
         # if state.is_showdown():
         #     for pos in range(0, self.num_players()):
         #         state.draw_card(pos, self.__deck[pos])

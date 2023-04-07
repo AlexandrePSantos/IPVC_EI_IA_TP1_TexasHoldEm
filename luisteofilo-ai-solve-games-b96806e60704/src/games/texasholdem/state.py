@@ -3,6 +3,8 @@ from games.texasholdem.card import TexasCard
 from games.state import State
 
 
+# TODO - MODIFICAR CLASSE STATE
+
 class TexasState(State):
 
     def __init__(self):
@@ -70,6 +72,7 @@ class TexasState(State):
     """
     get the total amount that was put into bets so far
     """
+
     def get_pot(self):
         return sum(self.__bets)
 
@@ -118,6 +121,7 @@ class TexasState(State):
     """
     a player in position pos reveices a card 
     """
+
     def draw_card(self, pos, card: TexasCard):
         # noinspection PyTypeChecker
         self.__cards[pos] = card
@@ -127,4 +131,3 @@ class TexasState(State):
 
     def get_sequence(self):
         return self.__sequence
-
