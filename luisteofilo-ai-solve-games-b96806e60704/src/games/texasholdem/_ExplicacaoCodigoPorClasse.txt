@@ -70,18 +70,38 @@ Por fim, o método print_stats imprime o nome do jogador, o lucro total obtido o
 ----\\----
 ----\\----
 
--------------------state.py:
+-------------------simulator.py:
 
 --> EN <--
+This code implements the TexasSimulator class, which is a simulator for the Texas Hold'em game with two players.
+The class inherits from GameSimulator, an abstract class that defines the basic functionalities of a game simulator.
 
+The class has a constructor that receives two TexasPlayer objects as a parameter and a private variable __deck that contains the deck of cards.
+The init_game() method is responsible for initializing the game, shuffling the deck, dealing two cards to each player, and three cards to the table.
+    The method returns a TexasState object that represents the current state of the game.
+
+The before_end_game() method is called before the game ends and is responsible for revealing the cards of all players if the game has ended,
+    a player has folded, or it is the last betting round.
+    The method iterates over all players and calls the draw_card() method of TexasState to reveal their cards.
+The end_game() method is called when the game ends and is ignored in this simulator.
 ----\\----
 
 --> PT <--
+Este código implementa a classe TexasSimulator, que é um simulador para o jogo Texas Hold'em com dois jogadores.
+A classe herda de GameSimulator, uma classe abstrata que define as funcionalidades básicas de um simulador de jogo.
 
+A classe possui um construtor que recebe dois objetos TexasPlayer como parâmetro e uma variável privada __deck que contém as cartas do baralho.
+O método init_game() é responsável por inicializar o jogo, embaralhando o baralho, distribuindo duas cartas para cada jogador e três cartas para a mesa.
+    O método retorna um objeto TexasState que representa o estado atual do jogo.
+
+O método before_end_game() é chamado antes do jogo terminar e é responsável por revelar as cartas de todos os jogadores caso o jogo tenha acabado,
+    um jogador tenha desistido ou seja a última rodada de apostas.
+    O método itera sobre todos os jogadores e chama o método draw_card() de TexasState para revelar suas cartas.
+O método end_game() é chamado quando o jogo termina e é ignorado neste simulador.
 ----\\----
 ----\\----
 
--------------------simulator.py:
+-------------------state.py:
 
 --> EN <--
 
