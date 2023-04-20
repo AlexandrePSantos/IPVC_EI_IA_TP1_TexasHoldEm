@@ -6,3 +6,6 @@ class TexasAction(Enum):
     CHECK = 1
     CALL = 2
     RAISE = 3
+    BET = 4
+    BLIND = 5
+    BIG_BLIND = 6

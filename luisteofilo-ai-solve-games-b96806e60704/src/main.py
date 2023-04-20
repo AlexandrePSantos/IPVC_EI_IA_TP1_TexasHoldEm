@@ -1,13 +1,5 @@
 from games.game_simulator import GameSimulator
 
-
-from games.poker.players.always_bet import AlwaysBetKuhnPokerPlayer
-from games.poker.players.always_bet_king import AlwaysBetKingKuhnPokerPlayer
-from games.poker.players.always_pass import AlwaysPassKuhnPokerPlayer
-from games.poker.players.cfr import CFRKuhnPokerPlayer
-from games.poker.players.random import RandomKuhnPokerPlayer
-from games.poker.simulator import KuhnPokerSimulator
-
 from games.texasholdem.players.human import HumanTexasPlayer
 from games.texasholdem.players.random import RandomTexasPlayer
 from games.texasholdem.simulator import TexasSimulator
@@ -32,63 +24,6 @@ def main():
     """
     PLAYERS_AND_DIFFICULTIES
     """
-    # --KhunPoker--
-    """
-    poker_simulations = [
-        # uncomment to play as human
-        # {
-        #    "name": "Connect4 - Human VS Random",
-        #    "player1": HumanKuhnPokerPlayer("Human"),
-        #    "player2": RandomKuhnPokerPlayer("Random")
-        # },
-        {
-            "name": "Kuhn Poker - Random VS Random",
-            "player1": RandomKuhnPokerPlayer("Random 1"),
-            "player2": RandomKuhnPokerPlayer("Random 2")
-        },
-        {
-            "name": "Kuhn Poker - AlwaysBet VS Random",
-            "player1": AlwaysBetKuhnPokerPlayer("AlwaysBet"),
-            "player2": RandomKuhnPokerPlayer("Random")
-        },
-        {
-            "name": "Kuhn Poker - AlwaysPass VS Random",
-            "player1": AlwaysPassKuhnPokerPlayer("AlwaysPass"),
-            "player2": RandomKuhnPokerPlayer("Random")
-        },
-        {
-            "name": "Kuhn Poker - AlwaysBet VS AlwaysPass",
-            "player1": AlwaysBetKuhnPokerPlayer("AlwaysBet"),
-            "player2": AlwaysPassKuhnPokerPlayer("AlwaysPass")
-        },
-        {
-            "name": "Kuhn Poker - AlwaysBet VS AlwaysBetKing",
-            "player1": AlwaysBetKuhnPokerPlayer("AlwaysBet"),
-            "player2": AlwaysBetKingKuhnPokerPlayer("AlwaysBetKing")
-        },
-        {
-            "name": "Kuhn Poker - CFR VS Random",
-            "player1": CFRKuhnPokerPlayer("CFR"),
-            "player2": RandomKuhnPokerPlayer("Random")
-        },
-        {
-            "name": "Kuhn Poker - CFR VS AlwaysPass",
-            "player1": CFRKuhnPokerPlayer("CFR"),
-            "player2": AlwaysPassKuhnPokerPlayer("AlwaysPass")
-        },
-        {
-            "name": "Kuhn Poker - CFR VS AlwaysBet",
-            "player1": CFRKuhnPokerPlayer("CFR"),
-            "player2": AlwaysBetKuhnPokerPlayer("AlwaysBet")
-        },
-        {
-            "name": "Kuhn Poker - CFR VS AlwaysBetKing",
-            "player1": CFRKuhnPokerPlayer("CFR"),
-            "player2": AlwaysBetKingKuhnPokerPlayer("AlwaysBetKing")
-        }
-    ]
-    """
-
     # --TexasHoldEm--
     tex_simulations = [
         {
@@ -100,11 +35,6 @@ def main():
 
     """
     SIMULATIONS
-    """
-    # --KhunPoker--
-    """
-    for sim in poker_simulations:
-        run_simulation(sim["name"], KuhnPokerSimulator(sim["player1"], sim["player2"]), num_iterations)
     """
     # --TexasHoldEm--
     for sim in tex_simulations:

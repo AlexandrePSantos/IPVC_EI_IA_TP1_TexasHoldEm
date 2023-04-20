@@ -7,6 +7,7 @@ FOLD represents the action of folding the hand.
 CHECK represents the action of not betting.
 CALL represents the action of matching the opponent's bet.
 RAISE represents the action of increasing the bet.
+BET represents the action of betting.
 ----\\----
 
 --> PT <--
@@ -16,6 +17,7 @@ FOLD representa a ação de desistir da mão.
 CHECK representa a ação de não apostar.
 CALL representa a ação de igualar a aposta do adversário.
 RAISE representa a ação de aumentar a aposta.
+BET representa a ação de apostar.
 ----\\----
 ----\\----
 

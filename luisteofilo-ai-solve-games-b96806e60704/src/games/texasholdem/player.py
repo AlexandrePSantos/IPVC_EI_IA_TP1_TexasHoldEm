@@ -31,7 +31,7 @@ class TexasPlayer(Player, ABC):
         self.__current_hand = cards
 
     """
-    gets the current player's card
+    gets the current player's hand
     """
     def get_current_hand(self):
         return self.__current_hand

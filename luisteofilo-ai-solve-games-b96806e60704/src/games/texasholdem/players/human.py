@@ -17,9 +17,9 @@ class HumanTexasPlayer(TexasPlayer):
         return {
             "b": TexasAction.BET,
             "bet": TexasAction.BET,
-            "p": TexasAction.PASS,
-            "pass": TexasAction.PASS
-        }.get(input("Choose an action (pass/p or bet/b): "))
+            "c": TexasAction.CHECK,
+            "check": TexasAction.CHECK
+        }.get(input("Choose an action (check/c or bet/b): "))
 
     def event_action(self, pos: int, action, new_state: State):
         print(f"> player {pos} {action}")
@@ -32,4 +32,4 @@ class HumanTexasPlayer(TexasPlayer):
 
     def event_new_game(self):
         print("--- New game ---")
-        print(f"> You are player {self.get_current_pos()} with card {self.get_current_card()}")
+        print(f"> You are player {self.get_current_pos()} with card {self.get_current_hand()}")

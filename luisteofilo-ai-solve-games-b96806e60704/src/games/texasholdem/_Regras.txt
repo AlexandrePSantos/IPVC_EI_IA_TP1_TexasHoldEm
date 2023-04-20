@@ -1,0 +1,15 @@
+action.py:
+ações possiveis no jogo
+
+card.py:
+baralho de cartas do jogo
+
+player.py:
+
+
+simulator.py:
+
+
+state.py:
+
+
