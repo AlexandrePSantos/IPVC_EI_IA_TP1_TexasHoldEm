@@ -22,10 +22,10 @@ class TexasPlayer(Player, ABC):
         """
         we also need to store the current cards we are holding
         """
-        self.__current_hand = []
+        self.__current_hand = [None, None]
 
     """
-    assigns a card to the player
+    assigns 2 cards to the player
     """
     def set_current_hand(self, cards: List[TexasCard]):
         self.__current_hand = cards

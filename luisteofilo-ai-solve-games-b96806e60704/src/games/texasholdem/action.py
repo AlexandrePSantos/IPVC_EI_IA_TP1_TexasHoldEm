@@ -7,5 +7,9 @@ class TexasAction(Enum):
     CALL = 2
     RAISE = 3
     BET = 4
-    BLIND = 5
-    BIG_BLIND = 6
+    ALLIN = 5
+
+    # FOLD -> desiste da mão
+    # CHECK -> desiste da ronda atual mas continua com a mão
+    # CALL -> igualar aposta mais alta feita
+    # RAISE -> aumenta o valor da aposta e passa a ser a mais alta

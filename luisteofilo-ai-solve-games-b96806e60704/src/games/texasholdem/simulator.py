@@ -1,7 +1,7 @@
 from random import shuffle
 
 from games.game_simulator import GameSimulator
-from games.texasholdem.card import TexasCard
+from games.texasholdem.card import Rank, Suit, TexasCard
 from games.texasholdem.player import TexasPlayer
 from games.texasholdem.state import TexasState
 
@@ -13,10 +13,9 @@ class TexasSimulator(GameSimulator):
         """
         deck of cards
         """
-        deck = list(TexasCard)
-        self.__deck = deck
+        self.__deck = [TexasCard(rank, suit) for rank in Rank for suit in Suit]
         self.community_cards = [None, None, None, None, None]
-        self.current_betting_round = 0
+        self.cur_bet_round = 0
 
     def init_game(self):
         shuffle(self.__deck)
@@ -31,15 +30,13 @@ class TexasSimulator(GameSimulator):
         for i in range(3):
             self.community_cards[i] = self.__deck.pop()
 
-        self.current_betting_round = 1
-
         return TexasState()
 
     def draw_community_card(self):
         # determine which community card to draw based on the current betting round
-        if self.current_betting_round == 1:
+        if self.cur_bet_round == 1:
             card_index = 3
-        elif self.current_betting_round == 2:
+        elif self.cur_bet_round == 2:
             card_index = 4
         else:
             return
@@ -49,16 +46,30 @@ class TexasSimulator(GameSimulator):
             self.community_cards[card_index] = self.__deck.pop()
 
         # increment the current betting round
-        self.current_betting_round += 1
+        self.cur_bet_round += 1
+
+    def get_remaining_cards(self):
+        return self.__deck
+
+    def get_cur_bet_round(self):
+        return self.cur_bet_round
+
+    def hand_cummunity(self):
+        hands = []
+        positions = self.get_player_positions()
+        for player in positions:
+            hand = player.get_current_hand()
+            combined_hand = hand + self.community_cards
+            hand.append(combined_hand)
+        return hands
 
     def before_end_game(self, state: TexasState):
-        # draw the next community card if we're not in the final betting round
-        if self.current_betting_round < 4:
-            self.draw_community_card()
-        # reveal all the cards when the game is over, one player folds, or last round of betting
-        if state.is_showdown() or state.get_current_betting_round() == 4:
-            for pos in range(self.num_players()):
-                state.draw_card(pos, self.__deck[pos])
+        # reveal all the cards
+        if state.is_showdown():
+            for pos in range(0, self.num_players()):
+                player = self.get_player(pos)
+                combined_hand = self.hand_community(player)
+                state.draw_card(pos, combined_hand)
 
     def end_game(self, state: TexasState):
         # ignored for this simulator

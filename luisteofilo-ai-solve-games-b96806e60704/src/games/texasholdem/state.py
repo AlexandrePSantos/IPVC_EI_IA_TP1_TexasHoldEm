@@ -22,85 +22,41 @@ class TexasState(State):
         """
         the cards that were seen so far
         """
-        self.__cards = [None, None, None, None, None]
-        """
-        the current round of betting
-        """
-        self.__round = 0
+        self.__cards = [None, None]
         """
         the best that were done so far
         in this version of Poker, each player bet $1 each before starting the game
         """
-        self.__bets = [0, 0]
-        """
-        the amount of chips each player has remaining
-        """
-        self.__chips = [100, 100]
+        self.__bets = [1, 1]
         """
         indicates if the game is in showdown (actions are finished and players are about to reveal the cards)
         """
         self.__is_showdown = False
 
-    @staticmethod
-    def get_num_players():
+    def get_num_players(self):
         return 2
-
-    def get_current_betting_round(self):
-        return self.__round
 
     def validate_action(self, action) -> bool:
         return not self.__is_finished and action is not None
 
     def update(self, action):
-        # handle blind and big blind actions
-        if self.__sequence == []:  # first action
-            self.__bets[0] = 1  # player 0 posts small blind
-            self.__bets[1] = 2  # player 1 posts big blind
-            self.__acting_player = 0  # first player to act after blinds
-            self.__sequence.append(TexasAction.BLIND)
-            self.__sequence.append(TexasAction.BIG_BLIND)
-        else:
+        # only need to check the outcome of the action if none was added until now
+        if len(self.__sequence) > 0:
             last_action = self.__sequence[-1]
 
-            # handle rest of the actions
-            if last_action == TexasAction.BET or last_action == TexasAction.RAISE:
+            if last_action == KuhnPokerAction.BET:
                 self.__is_finished = True
-                if action == TexasAction.FOLD:
-                    self.__sequence.append(action)
-                elif action == TexasAction.CALL:
-                    self.__sequence.append(action)
-                else:
+                if action == KuhnPokerAction.BET:
                     self.__is_showdown = True
-                    self.__sequence.append(action)
-            elif last_action == TexasAction.CHECK:
-                if action == TexasAction.CHECK:
-                    self.__sequence.append(action)
-                elif action == TexasAction.BET:
-                    self.__bets[self.__acting_player] += 1
-                    self.__sequence.append(action)
-                else:
+            else:
+                if action == KuhnPokerAction.PASS:
                     self.__is_finished = True
                     self.__is_showdown = True
-                    self.__sequence.append(action)
-            elif last_action == TexasAction.CALL:
-                if action == TexasAction.CHECK:
-                    self.__sequence.append(action)
-                elif action == TexasAction.BET:
-                    self.__bets[self.__acting_player] += 1
-                    self.__is_finished = True
-                    self.__is_showdown = True
-                    self.__sequence.append(action)
-                else:
-                    self.__is_finished = True
-                    self.__is_showdown = True
-                    self.__sequence.append(action)
-            elif last_action == TexasAction.FOLD:
-                self.__is_finished = True
-                self.__is_showdown = True
-                self.__sequence.append(action)
 
-        # if someone is betting, we are going to increase their bet amount
-        if action == TexasAction.BET or action == TexasAction.RAISE:
+        self.__sequence.append(action)
+
+        # if someone is betting, we are going to increase its bet amount
+        if action == KuhnPokerAction.BET:
             self.__bets[self.__acting_player] += 1
 
         # swap the player
@@ -108,22 +64,12 @@ class TexasState(State):
 
     def display(self):
         for action in self.__sequence:
-            if action == TexasAction.BET:
-                print('b', end="")
-            elif action == TexasAction.FOLD:
-                print('f', end="")
-            elif action == TexasAction.CALL:
-                print('c', end="")
-            elif action == TexasAction.RAISE:
-                print('r', end="")
-            else:
-                print('p', end="")
+            print('b' if action == KuhnPokerAction.BET else 'p', end="")
         print(f": pot = {self.get_pot()}")
 
     """
     get the total amount that was put into bets so far
     """
-
     def get_pot(self):
         return sum(self.__bets)
 
@@ -134,7 +80,7 @@ class TexasState(State):
         return self.__acting_player
 
     def clone(self):
-        cloned = TexasState()
+        cloned = KuhnPokerState()
         cloned.__bets = self.__bets.copy()
         cloned.__sequence = self.__sequence.copy()
         cloned.__is_finished = self.__is_finished
@@ -142,7 +88,6 @@ class TexasState(State):
         for i in range(0, len(self.__cards)):
             cloned.__cards[i] = self.__cards[i]
         cloned.__is_showdown = self.__is_showdown
-        cloned.__round = self.__round
         return cloned
 
     def get_result(self, pos):
@@ -169,6 +114,13 @@ class TexasState(State):
 
     def before_results(self):
         pass
+
+    """
+    a player in position pos reveices a card 
+    """
+    def draw_card(self, pos, card: KuhnPokerCard):
+        # noinspection PyTypeChecker
+        self.__cards[pos] = card
 
     def is_showdown(self):
         return self.__is_showdown
