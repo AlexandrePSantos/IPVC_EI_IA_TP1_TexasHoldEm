@@ -34,7 +34,8 @@ class TexasPlayer(Player, ABC):
     gets the current player's hand
     """
     def get_current_hand(self):
-        return self.__current_hand
+        return [str(card) for card in self.__current_hand]
+        # return self.__current_hand
 
     """
     gets the score

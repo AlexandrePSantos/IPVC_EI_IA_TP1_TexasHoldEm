@@ -5,6 +5,11 @@ ações possiveis no jogo
 ----------\\---------
 --> card.py: <--
 baralho de cartas do jogo
+avaliar as mãos dos jogadores
+
+----------\\---------
+--> evaluate.py: <--
+
 
 ----------\\---------
 --> player.py <--

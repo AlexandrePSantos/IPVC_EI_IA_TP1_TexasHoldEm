@@ -18,10 +18,10 @@ class Rank(Enum):
 
 
 class Suit(Enum):
-    HEARTS = 'hearts'
-    DIAMONDS = 'diamonds'
-    CLUBS = 'clubs'
-    SPADES = 'spades'
+    HEARTS = '♥️'
+    DIAMONDS = '♦️'
+    CLUBS = '♣️'
+    SPADES = '♠️'
 
 
 class TexasCard:
@@ -29,9 +29,14 @@ class TexasCard:
         self.rank = rank
         self.suit = suit
 
-    def __lt__(self, other):
-        if self.__class__ is other.__class__:
-            return self.rank.value < other.rank.value
-
     def __str__(self):
-        return f"{self.rank.name.lower()} of {self.suit.value}"
+        if self.rank.value == 11:
+            return f"J{self.suit.value}"
+        elif self.rank.value == 12:
+            return f"Q{self.suit.value}"
+        elif self.rank.value == 13:
+            return f"K{self.suit.value}"
+        elif self.rank.value == 14:
+            return f"A{self.suit.value}"
+        else:
+            return f"{self.rank.value}{self.suit.value}"
