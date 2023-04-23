@@ -136,8 +136,8 @@ class GameSimulator(ABC):
     def print_stats(self):
         for player in self.__permutations[0]:
             player.print_stats()
-        for player in self.__permutations[0]:
-            player.print_draws()
+        # for player in self.__permutations[0]:
+        #     player.print_draws()
             break
 
     # returns the list of players

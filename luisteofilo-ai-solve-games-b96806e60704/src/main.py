@@ -46,9 +46,12 @@ def main():
     """
     SIMULATIONS
     """
+    i = 0
     # --TexasHoldEm--
     for sim in tex_simulations:
         run_simulation(sim["name"], TexasSimulator(sim["player1"], sim["player2"]), num_iterations)
+        i = i + 1
+        print(i)
 
 
 if __name__ == "__main__":

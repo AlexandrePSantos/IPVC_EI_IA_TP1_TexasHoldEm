@@ -28,6 +28,7 @@ class TexasState(State):
 
     # HANDS ATUAIS
     def get_current_hands(self):
+        print(self.__hands)
         return self.__hands
 
     # VALIDA AÇÕES
@@ -40,12 +41,12 @@ class TexasState(State):
         if len(self.__sequence) > 0:
             last_action = self.__sequence[-1]
 
-            if last_action == TexasAction.BET:
+            if last_action == TexasAction.BET and len(self.__sequence) == 8:
                 self.__is_finished = True
-                if action == TexasAction.BET:
+                if action == TexasAction.BET and len(self.__sequence) == 8:
                     self.__is_showdown = True
             else:
-                if action == TexasAction.PASS:
+                if action == TexasAction.PASS and len(self.__sequence) == 8:
                     self.__is_finished = True
                     self.__is_showdown = True
 
@@ -57,22 +58,22 @@ class TexasState(State):
 
         # primeira ronda de apostas feita metem tres cards na mesa      !!FLOP!!
         if len(self.__sequence) == 2:
-            print("FLOP")
+            print(self.__sequence)
             # draw community cards
             for i in range(3):
                 if self.__community_cards[i] is None:
                     self.__community_cards[i] = self.__deck.pop()
         # segunda ronda metem mais uma carta                            !!TURN!!
         elif len(self.__sequence) == 4:
-            print("TURN")
+            print(self.__sequence)
             self.__community_cards[3] = self.__deck.pop()
         # terceira ronda após apostas metem mais uma e será a última    !!RIVER!!
         elif len(self.__sequence) == 6:
-            print("RIVER")
+            print(self.__sequence)
             self.__community_cards[4] = self.__deck.pop()
         # ultima ronda de bets !!SHOWDOWN!!
         elif len(self.__sequence) == 8:
-            print("END")
+            print(self.__sequence)
             self.__is_finished = True
 
         # swap the player
