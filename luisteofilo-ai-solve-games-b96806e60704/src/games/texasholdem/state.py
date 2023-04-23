@@ -1,5 +1,6 @@
 from games.texasholdem.action import TexasAction
 from games.texasholdem.card import TexasCard
+from games.texasholdem.evaluate import TexasEvaluator
 from games.state import State
 from typing import List
 
@@ -26,9 +27,7 @@ class TexasState(State):
         self.__deck = []
         self.__hands = []
         self.__community_cards = [None, None, None, None, None]
-        """
-        bets
-        """
+        self.__parsed_hands = []
         self.__bets = [1, 1]
         """
         indicates if the game is in showdown (actions are finished and players are about to reveal the cards)
@@ -42,6 +41,9 @@ class TexasState(State):
 
     def set_deck(self, deck):
         self.__deck = deck
+
+    def get_current_hands(self):
+        return self.__hands
 
     def validate_action(self, action) -> bool:
         return not self.__is_finished and action is not None
@@ -78,7 +80,7 @@ class TexasState(State):
         self.__community_cards = cards
 
     def draw_community_card(self):
-        if self.cur_bet_round <= 1:
+        if self.cur_bet_round == 0:
             for i in range(3):
                 if self.__community_cards[i] is None:
                     self.__community_cards[i] = self.__deck.pop()
@@ -106,6 +108,7 @@ class TexasState(State):
     """
     get the total amount that was put into bets so far
     """
+
     def get_pot(self):
         return sum(self.__bets)
 
@@ -161,12 +164,45 @@ class TexasState(State):
     def get_sequence(self):
         return self.__sequence
 
-    # def hand_community(self):
-    #     combination = []
-    #     positions = self.get_player_positions()
-    #     for player in positions:
-    #         combination = player.get_current_hand()
-    #         combined_hand = self.__hands + self.__community_cards
-    #         combination.append(combined_hand)
-    #     return combination
-    #
+    # converter carta de texto para valor númérico de forma a calcular o valor da mão
+    @staticmethod
+    def parse_hand(self, hand: List[TexasCard]) -> List[int]:
+        return [card.parse() for card in hand]
+
+    @staticmethod
+    def parse_community_cards(self) -> List[int]:
+        return [card.parse() for card in self.__community_cards]
+
+    def parse_hands(self):
+        self.__parsed_hands = [self.parse_hand(hand) for hand in self.__hands]
+        self.__parsed_hands.append(self.parse_community_cards())
+
+    def calculate_hand_value(self) -> List[int]:
+        hand_values = []
+        for parsed_hand in self.__parsed_hands:
+            # Combine parsed hand and community cards into a single list
+            cards = parsed_hand + self.__community_cards
+            # Sort the cards by rank
+            cards.sort(key=lambda c: c.rank.value, reverse=True)
+            # Check for highest-ranking hand first, move on to lower-ranking hands if highest-ranking not present
+            if TexasEvaluator.is_royal_flush(cards):
+                hand_values.append(10)
+            elif TexasEvaluator.is_straight_flush(cards):
+                hand_values.append(9)
+            elif TexasEvaluator.is_four_of_a_kind(cards):
+                hand_values.append(8)
+            elif TexasEvaluator.is_full_house(cards):
+                hand_values.append(7)
+            elif TexasEvaluator.is_flush(cards):
+                hand_values.append(6)
+            elif TexasEvaluator.is_straight(cards):
+                hand_values.append(5)
+            elif TexasEvaluator.is_three_of_a_kind(cards):
+                hand_values.append(4)
+            elif TexasEvaluator.is_two_pair(cards):
+                hand_values.append(3)
+            elif TexasEvaluator.is_pair(cards):
+                hand_values.append(2)
+            else:
+                hand_values.append(1)
+        return hand_values

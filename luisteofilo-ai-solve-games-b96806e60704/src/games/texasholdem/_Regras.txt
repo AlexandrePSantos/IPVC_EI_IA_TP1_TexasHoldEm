@@ -1,3 +1,24 @@
+draw hands
+
+player 0 -> blind: 10
+player 1 -> Bblind: 11 (maior obrigatoriamente)
+
+entram community cards (3 na mesa)
+
+betting round
+
+add community card (4 na mesa)
+
+betting round
+
+add community card (5 na mesa)
+
+betting round
+
+Showdown (revelar mãos)
+
+Evaluate -> definir o vencedor
+
 ----------\\---------
 --> action.py: <--
 ações possiveis no jogo

@@ -35,11 +35,9 @@ class TexasSimulator(GameSimulator):
         return self.__deck
 
     def before_end_game(self, state: TexasState):
-        # reveal all the cards
+        # if we reached the show down, we are going to reveal the cards to all players
         if state.is_showdown():
-            for pos in range(0, self.num_players()):
-                player = self.get_player(pos)
-                state.draw_card(pos, player.get_current_hand())
+            state.get_current_hands()
 
     def end_game(self, state: TexasState):
         # ignored for this simulator
