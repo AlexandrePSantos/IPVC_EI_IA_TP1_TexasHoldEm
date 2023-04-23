@@ -18,7 +18,6 @@ class TexasState(State):
         self.__parsed_hands = []
         self.__bets = [1, 1]
         self.__is_showdown = False
-        self.cur_bet_round = 0
 
     @staticmethod
     def get_num_players():
@@ -56,29 +55,28 @@ class TexasState(State):
         if action == TexasAction.BET:
             self.__bets[self.__acting_player] += 1
 
-        # check if the first round of betting is complete (both players have acted)
+        # primeira ronda de apostas feita metem tres cards na mesa      !!FLOP!!
         if len(self.__sequence) == 2:
+            print("FLOP")
             # draw community cards
-            self.draw_community_card()
-
-        # swap the player
-        self.__acting_player = 1 if self.__acting_player == 0 else 0
-
-    # DAR CARTAS PARA A MESA
-    def draw_community_card(self):
-        if self.cur_bet_round == 0:
             for i in range(3):
                 if self.__community_cards[i] is None:
                     self.__community_cards[i] = self.__deck.pop()
-            self.cur_bet_round += 1
-        elif self.cur_bet_round == 2:
-            if self.__community_cards[self.cur_bet_round] is None:
-                self.__community_cards[self.cur_bet_round] = self.__deck.pop()
-            self.cur_bet_round += 1
-        elif self.cur_bet_round <= 4:
-            if self.__community_cards[self.cur_bet_round] is None:
-                self.__community_cards[self.cur_bet_round] = self.__deck.pop()
-        self.cur_bet_round += 1
+        # segunda ronda metem mais uma carta                            !!TURN!!
+        elif len(self.__sequence) == 4:
+            print("TURN")
+            self.__community_cards[3] = self.__deck.pop()
+        # terceira ronda após apostas metem mais uma e será a última    !!RIVER!!
+        elif len(self.__sequence) == 6:
+            print("RIVER")
+            self.__community_cards[4] = self.__deck.pop()
+        # ultima ronda de bets !!SHOWDOWN!!
+        elif len(self.__sequence) == 8:
+            print("END")
+            self.__is_finished = True
+
+        # swap the player
+        self.__acting_player = 1 if self.__acting_player == 0 else 0
 
     def get_pot(self):
         return sum(self.__bets)
@@ -97,7 +95,6 @@ class TexasState(State):
             cloned.__hands[i] = self.__hands[i].copy()
         cloned.__community_cards = self.__community_cards.copy()
         cloned.__is_showdown = self.__is_showdown
-        cloned.cur_bet_round = self.cur_bet_round
         return cloned
 
     # PREVISÃO DE RESULTADOS
@@ -160,29 +157,39 @@ class TexasState(State):
         hand_values = []
         for parsed_hand in self.__parsed_hands:
             # Combine parsed hand and community cards into a single list
-            cards = parsed_hand + self.__community_cards
+            cards = parsed_hand
             # Sort the cards by rank
             cards.sort(key=lambda c: c.rank.value, reverse=True)
             # Check for highest-ranking hand first, move on to lower-ranking hands if highest-ranking not present
             if TexasEvaluator.is_royal_flush(cards):
+                print("10")
                 hand_values.append(10)
             elif TexasEvaluator.is_straight_flush(cards):
+                print("2")
                 hand_values.append(9)
             elif TexasEvaluator.is_four_of_a_kind(cards):
+                print("3")
                 hand_values.append(8)
             elif TexasEvaluator.is_full_house(cards):
+                print("4")
                 hand_values.append(7)
             elif TexasEvaluator.is_flush(cards):
+                print("5")
                 hand_values.append(6)
             elif TexasEvaluator.is_straight(cards):
+                print("6")
                 hand_values.append(5)
             elif TexasEvaluator.is_three_of_a_kind(cards):
+                print("7")
                 hand_values.append(4)
             elif TexasEvaluator.is_two_pair(cards):
+                print("8")
                 hand_values.append(3)
             elif TexasEvaluator.is_pair(cards):
+                print("9")
                 hand_values.append(2)
             else:
+                print("1")
                 hand_values.append(1)
         return hand_values
 

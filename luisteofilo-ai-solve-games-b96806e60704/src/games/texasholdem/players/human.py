@@ -4,9 +4,6 @@ from games.texasholdem.state import TexasState
 from games.state import State
 
 
-# TODO - MODIFICAR CLASSE HUMAN
-
-
 class HumanTexasPlayer(TexasPlayer):
 
     def __init__(self, name):
@@ -18,9 +15,9 @@ class HumanTexasPlayer(TexasPlayer):
         return {
             "b": TexasAction.BET,
             "bet": TexasAction.BET,
-            "c": TexasAction.PASS,
-            "check": TexasAction.PASS
-        }.get(input("Choose an action (check/c or bet/b): "))
+            "p": TexasAction.PASS,
+            "pass": TexasAction.PASS
+        }.get(input("Choose an action (pass/p or bet/b): "))
 
     def event_action(self, pos: int, action, new_state: State):
         print(f"> player {pos} {action}")

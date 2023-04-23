@@ -15,19 +15,16 @@ class TexasSimulator(GameSimulator):
         """
         self.__deck = [TexasCard(rank, suit) for rank in Rank for suit in Suit]
         self.state = TexasState()
-        self.state.set_deck(self.__deck)
+        self.deck_copy = self.__deck.copy()
+        self.state.set_deck(self.deck_copy)
 
     def init_game(self):
-        shuffle(self.__deck)
+        shuffle(self.deck_copy)
         # assign two cards to each player
         positions = self.get_player_positions()
         for player in positions:
-            cards = self.__deck[:2]
+            cards = self.deck_copy[:2]
             player.set_current_hand(cards)
-            self.__deck = self.__deck[2:]
-
-        # assign three community cards
-        self.state.draw_community_card()
 
         return self.state
 
