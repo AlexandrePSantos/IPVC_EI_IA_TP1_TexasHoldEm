@@ -26,11 +26,21 @@ def main():
     """
     # --TexasHoldEm--
     tex_simulations = [
+        # {
+        #     "name": "Texas HoldEm - Human VS Human",
+        #     "player1": HumanTexasPlayer("Human"),
+        #     "player2": HumanTexasPlayer("Human")
+        # }
         {
-            "name": "Texas HoldEm - Human VS Human",
+            "name": "Texas HoldEm - Human VS Random",
             "player1": HumanTexasPlayer("Human"),
-            "player2": HumanTexasPlayer("Human")
+            "player2": RandomTexasPlayer("Random")
         }
+        # {
+        #     "name": "Texas HoldEm - Random VS Random",
+        #     "player1": RandomTexasPlayer("Random"),
+        #     "player2": RandomTexasPlayer("Random")
+        # }
     ]
 
     """

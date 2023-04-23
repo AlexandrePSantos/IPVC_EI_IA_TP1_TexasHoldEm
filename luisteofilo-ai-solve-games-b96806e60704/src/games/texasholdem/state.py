@@ -9,29 +9,14 @@ class TexasState(State):
 
     def __init__(self):
         super().__init__()
-        """
-        the sequence of plays
-        """
         self.__sequence = []
-        """
-        the acting player index
-        """
         self.__acting_player = 0
-        """
-        indicates if the game is finished
-        """
         self.__is_finished = False
-        """
-        the cards that were seen so far and the deck
-        """
         self.__deck = []
         self.__hands = []
         self.__community_cards = [None, None, None, None, None]
         self.__parsed_hands = []
         self.__bets = [1, 1]
-        """
-        indicates if the game is in showdown (actions are finished and players are about to reveal the cards)
-        """
         self.__is_showdown = False
         self.cur_bet_round = 0
 
@@ -42,12 +27,15 @@ class TexasState(State):
     def set_deck(self, deck):
         self.__deck = deck
 
+    # HANDS ATUAIS
     def get_current_hands(self):
         return self.__hands
 
+    # VALIDA AÇÕES
     def validate_action(self, action) -> bool:
         return not self.__is_finished and action is not None
 
+    # ATUALIZAR ESTADO D JOGO
     def update(self, action):
         # only need to check the outcome of the action if none was added until now
         if len(self.__sequence) > 0:
@@ -76,9 +64,7 @@ class TexasState(State):
         # swap the player
         self.__acting_player = 1 if self.__acting_player == 0 else 0
 
-    def set_community_cards(self, cards: List[TexasCard]):
-        self.__community_cards = cards
-
+    # DAR CARTAS PARA A MESA
     def draw_community_card(self):
         if self.cur_bet_round == 0:
             for i in range(3):
@@ -92,35 +78,15 @@ class TexasState(State):
         elif self.cur_bet_round <= 4:
             if self.__community_cards[self.cur_bet_round] is None:
                 self.__community_cards[self.cur_bet_round] = self.__deck.pop()
-            self.cur_bet_round += 1
-
-    def get_comm_cards(self):
-        return self.__community_cards
-
-    def display(self):
-        for action in self.__sequence:
-            print('b' if action == TexasAction.BET else 'p', end="")
-        print(f": pot = {self.get_pot()}")
-
-    def display_community_cards(self):
-        print("Community Cards: " + ", ".join(str(card) for card in self.__community_cards if card is not None))
-
-    """
-    get the total amount that was put into bets so far
-    """
+        self.cur_bet_round += 1
 
     def get_pot(self):
         return sum(self.__bets)
 
-    def is_finished(self) -> bool:
-        return self.__is_finished
-
     def get_acting_player(self) -> int:
         return self.__acting_player
 
-    def get_cur_bet_round(self):
-        return self.cur_bet_round
-
+    # CLONAR ESTADO ATUAL
     def clone(self):
         cloned = TexasState()
         cloned.__bets = self.__bets.copy()
@@ -131,8 +97,10 @@ class TexasState(State):
             cloned.__hands[i] = self.__hands[i].copy()
         cloned.__community_cards = self.__community_cards.copy()
         cloned.__is_showdown = self.__is_showdown
+        cloned.cur_bet_round = self.cur_bet_round
         return cloned
 
+    # PREVISÃO DE RESULTADOS
     def get_result(self, pos):
         # no result if the game is not finished
         if not self.__is_finished:
@@ -148,9 +116,16 @@ class TexasState(State):
         opp_pos = 1 if pos == 0 else 0
 
         if self.__is_showdown:
-            # noinspection PyTypeChecker
-            # if there is a showdown, we will give 1 or 2 to the player with the best card and -1 or -2 to the looser
-            return (1 if self.__hands[pos] > self.__hands[opp_pos] else -1) * (pot / 2)
+            player_hand_value = self.calculate_hand_value()[pos]
+            opponent_hand_value = self.calculate_hand_value()[opp_pos]
+
+            # determine the winner based on hand value
+            if player_hand_value > opponent_hand_value:
+                return pot / 2
+            elif opponent_hand_value > player_hand_value:
+                return -(pot / 2)
+            else:
+                return 0
         else:
             # this means that someone folded, so we will return the positive score to the player with the highest bet
             return 1 if self.__bets[pos] > self.__bets[opp_pos] else -1
@@ -158,25 +133,29 @@ class TexasState(State):
     def before_results(self):
         pass
 
+    def is_finished(self) -> bool:
+        return self.__is_finished
+
     def is_showdown(self):
         return self.__is_showdown
 
     def get_sequence(self):
         return self.__sequence
 
-    # converter carta de texto para valor númérico de forma a calcular o valor da mão
+    # CONVERTER CARTAS DE STR PARA VALOR NUMERICO
     @staticmethod
-    def parse_hand(self, hand: List[TexasCard]) -> List[int]:
+    def parse_hand(hand: List[TexasCard]) -> List[int]:
         return [card.parse() for card in hand]
 
-    @staticmethod
-    def parse_community_cards(self) -> List[int]:
-        return [card.parse() for card in self.__community_cards]
-
     def parse_hands(self):
-        self.__parsed_hands = [self.parse_hand(hand) for hand in self.__hands]
-        self.__parsed_hands.append(self.parse_community_cards())
+        self.__parsed_hands = []
+        for hand in self.__hands:
+            parsed_hand = TexasState.parse_hand(hand)
+            if self.__community_cards:
+                parsed_hand += TexasState.parse_hand(self.__community_cards)
+            self.__parsed_hands.append(parsed_hand)
 
+    # CALCULAR HANDS
     def calculate_hand_value(self) -> List[int]:
         hand_values = []
         for parsed_hand in self.__parsed_hands:
@@ -206,3 +185,12 @@ class TexasState(State):
             else:
                 hand_values.append(1)
         return hand_values
+
+    # DISPLAY
+    def display(self):
+        for action in self.__sequence:
+            print('b' if action == TexasAction.BET else 'p', end="")
+        print(f": pot = {self.get_pot()}")
+
+    def display_community_cards(self):
+        print("Community Cards: " + ", ".join(str(card) for card in self.__community_cards if card is not None))
