@@ -1,4 +1,5 @@
 from games.texasholdem.action import TexasAction
+from games.texasholdem.player import TexasPlayer
 from games.texasholdem.card import Rank, Suit, TexasCard
 from games.texasholdem.evaluate import TexasEvaluator
 from games.state import State
@@ -17,12 +18,15 @@ class TexasState(State):
         # new attributes
         self.__deck = []
         self.__hands = [[] for _ in range(2)]
+        self.__parsed_hands = [[] for _ in range(2)]
         self.__community_cards = [None, None, None, None, None]
-        self.__parsed_hands = []
         self.__hand_values = []
 
     def get_num_players(self):
         return 2
+
+    def set_hands(self, hands):
+        self.__hands = hands
 
     def set_deck(self, deck):
         self.__deck = deck
@@ -66,19 +70,16 @@ class TexasState(State):
             self.__hand_values = self.calculate_hand_value()
         # segunda ronda metem mais uma carta                            !!TURN!!
         elif len(self.__sequence) == 4:
-            print(self.__hand_values)
             print(self.__sequence)
             self.__community_cards[3] = self.__deck.pop()
             self.__hand_values = self.calculate_hand_value()
         # terceira ronda após apostas metem mais uma e será a última    !!RIVER!!
         elif len(self.__sequence) == 6:
-            print(self.__hand_values)
             print(self.__sequence)
             self.__community_cards[4] = self.__deck.pop()
             self.__hand_values = self.calculate_hand_value()
         # ultima ronda de bets !!SHOWDOWN!!
         elif len(self.__sequence) == 8:
-            print(self.__hand_values)
             self.__is_finished = True
 
         # swap the player
@@ -155,57 +156,75 @@ class TexasState(State):
         return self.__sequence
 
     # CONVERTER CARTAS DE STR PARA VALOR NUMERICO
-    @staticmethod
-    def parse_hand(hand: List[str]) -> List[TexasCard]:
-        parsed_hand = []
-        for card_str in hand:
-            rank_str, suit_str = card_str[:-1], card_str[-1]
-            rank = Rank[rank_str]
-            suit = Suit[suit_str]
-            card = TexasCard(rank, suit)
-            parsed_hand.append(card)
-        return parsed_hand
-
-    def parse_hands(self):
-        self.__parsed_hands = []
-        for hand in self.__hands:
-            parsed_hand = TexasState.parse_hand(hand)
-            if self.__community_cards:
-                community_card_strs = [str(card) for card in self.__community_cards]
-                parsed_hand += TexasState.parse_hand(community_card_strs)
+    def parse_hands(self) -> List[List[TexasCard]]:
+        parsed_hands = []
+        for i, hand in enumerate(self.__hands):
+            # print(f"hand {i}: {hand}")
+            parsed_hand = []
+            for card_str in hand:
+                # print(f"card_str: {card_str}")
+                card_str = str(card_str)
+                rank_str = card_str[:-1]
+                # print(f"rank_str: {rank_str}")
+                suit_str = card_str[-1]
+                # print(f"suit_str: {suit_str}")
+                rank = Rank(int(rank_str))
+                suit = Suit(suit_str)
+                card = TexasCard(rank, suit)
+                parsed_hand.append(card)
+            print(f"parsed_hand {i}: {parsed_hand}")
             self.__parsed_hands.append(parsed_hand)
+        # community cards
+        parsed_community_cards = []
+        counter = 0
+        for card_str in self.__community_cards:
+            if card_str is None:
+                break
+            card_str = str(card_str)
+            rank_str = card_str[:-1]
+            suit_str = card_str[-1]
+            rank = Rank(int(rank_str))
+            suit = Suit(suit_str)
+            card = TexasCard(rank, suit)
+            if card not in parsed_community_cards:
+                parsed_community_cards.append(card)
+        self.__parsed_hands[0].append(parsed_community_cards)
+        self.__parsed_hands[1].append(parsed_community_cards)
         print(self.__parsed_hands)
+        return self.__parsed_hands
 
-    # CALCULAR HANDS
-    def calculate_hand_value(self) -> List[int]:
-        hand_values = []
-        for parsed_hand in self.__parsed_hands:
-            # Combine parsed hand and community cards into a single list
-            cards = parsed_hand
-            # Sort the cards by rank
-            cards.sort(key=lambda c: c.rank.value, reverse=True)
-            # Check for highest-ranking hand first, move on to lower-ranking hands if highest-ranking not present
-            if TexasEvaluator.is_royal_flush(cards):
-                hand_values.append(10)
-            elif TexasEvaluator.is_straight_flush(cards):
-                hand_values.append(9)
-            elif TexasEvaluator.is_four_of_a_kind(cards):
-                hand_values.append(8)
-            elif TexasEvaluator.is_full_house(cards):
-                hand_values.append(7)
-            elif TexasEvaluator.is_flush(cards):
-                hand_values.append(6)
-            elif TexasEvaluator.is_straight(cards):
-                hand_values.append(5)
-            elif TexasEvaluator.is_three_of_a_kind(cards):
-                hand_values.append(4)
-            elif TexasEvaluator.is_two_pair(cards):
-                hand_values.append(3)
-            elif TexasEvaluator.is_pair(cards):
-                hand_values.append(2)
-            else:
-                hand_values.append(1)
-        return hand_values
+    # [[11C, 2C, 11H, 7C, 2H], [14H, 10D, 11H, 7C, 2H]]
+    # CALCULAR HANDS -> List[int]
+    def calculate_hand_value(self):
+        self.parse_hands()
+        # print(self.get_current_hands())
+        # print("# parse hand" + str(self.__parsed_hands))
+        # for parsed_hand in self.__parsed_hands:
+        #     # Combine parsed hand and community cards into a single list
+        #     cards = [c for c in parsed_hand if c is not None]
+        #     cards.sort(key=lambda c: c.rank.value, reverse=True)
+        #     # Check for highest-ranking hand first, move on to lower-ranking hands if highest-ranking not present
+        #     if TexasEvaluator.is_royal_flush(cards):
+        #         self.__hand_values.append(10)
+        #     elif TexasEvaluator.is_straight_flush(cards):
+        #         self.__hand_values.append(9)
+        #     elif TexasEvaluator.is_four_of_a_kind(cards):
+        #         self.__hand_values.append(8)
+        #     elif TexasEvaluator.is_full_house(cards):
+        #         self.__hand_values.append(7)
+        #     elif TexasEvaluator.is_flush(cards):
+        #         self.__hand_values.append(6)
+        #     elif TexasEvaluator.is_straight(cards):
+        #         self.__hand_values.append(5)
+        #     elif TexasEvaluator.is_three_of_a_kind(cards):
+        #         self.__hand_values.append(4)
+        #     elif TexasEvaluator.is_two_pair(cards):
+        #         self.__hand_values.append(3)
+        #     elif TexasEvaluator.is_pair(cards):
+        #         self.__hand_values.append(2)
+        #     else:
+        #         self.__hand_values.append(1)
+        # return self.__hand_values
 
     # DISPLAY
     def display(self):

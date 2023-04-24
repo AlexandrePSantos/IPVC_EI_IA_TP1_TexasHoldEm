@@ -19,7 +19,7 @@ class RandomTexasPlayer(TexasPlayer):
         pass
 
     def event_result(self, pos: int, result: int):
-        print(f"> player {pos} got ${result}")
+        pass
 
     def event_end_game(self, final_state: State):
         # ignore

@@ -19,14 +19,15 @@ class TexasSimulator(GameSimulator):
 
     def init_game(self):
         shuffle(self.__deck)
-
+        hands = []
         # assign two cards to each player
         positions = self.get_player_positions()
         for player in positions:
             cards = self.__deck[:2]
             player.set_current_hand(cards)
             self.__deck = self.__deck[2:]
-
+            hands.append(cards)
+        self.state.set_hands(hands)
         return self.state
 
     def before_end_game(self, state: TexasState):

@@ -18,10 +18,10 @@ class Rank(Enum):
 
 
 class Suit(Enum):
-    HEARTS = '♥️'
-    DIAMONDS = '♦️'
-    CLUBS = '♣️'
-    SPADES = '♠️'
+    HEARTS = 'H'
+    DIAMONDS = 'D'
+    CLUBS = 'C'
+    SPADES = 'S'
 
 
 class TexasCard:
@@ -29,16 +29,19 @@ class TexasCard:
         self.rank = rank
         self.suit = suit
 
+    def __repr__(self):
+        return f"{self.rank.value}{self.suit.value}"
+
     def __str__(self):
-        if self.rank.value == 11:
-            return f"J{self.suit.value}"
-        elif self.rank.value == 12:
-            return f"Q{self.suit.value}"
-        elif self.rank.value == 13:
-            return f"K{self.suit.value}"
-        elif self.rank.value == 14:
-            return f"A{self.suit.value}"
-        else:
+        # if self.rank.value == 11:
+        #     return f"J{self.suit.value}"
+        # elif self.rank.value == 12:
+        #     return f"Q{self.suit.value}"
+        # elif self.rank.value == 13:
+        #     return f"K{self.suit.value}"
+        # elif self.rank.value == 14:
+        #     return f"A{self.suit.value}"
+        # else:
             return f"{self.rank.value}{self.suit.value}"
 
     def parse(self) -> int:
@@ -53,3 +56,8 @@ class TexasCard:
             return 13  # King
         elif rank_value == 14:
             return 14  # Ace
+
+    # HEARTS = '♥'
+    # DIAMONDS = '♦'
+    # CLUBS = '♣'
+    # SPADES = '♠'
