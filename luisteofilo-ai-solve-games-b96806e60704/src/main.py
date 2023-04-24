@@ -8,9 +8,10 @@ from games.texasholdem.simulator import TexasSimulator
 def run_simulation(desc: str, simulator: GameSimulator, iterations: int):
     print(f"----- {desc} -----")
 
-    for i in range(0, iterations):
+    for i in range(iterations):
         simulator.change_player_positions()
         simulator.run_simulation()
+        print(f"Iteration {i + 1}: Completed")
 
     print("Results for the game:")
     simulator.print_stats()
@@ -19,7 +20,7 @@ def run_simulation(desc: str, simulator: GameSimulator, iterations: int):
 def main():
     print("ESTG IA Games Simulator")
 
-    num_iterations = 1
+    num_iterations = 10
 
     """
     PLAYERS_AND_DIFFICULTIES
@@ -31,27 +32,24 @@ def main():
         #     "player1": HumanTexasPlayer("Human"),
         #     "player2": HumanTexasPlayer("Human")
         # }
-        {
-            "name": "Texas HoldEm - Human VS Random",
-            "player1": HumanTexasPlayer("Human"),
-            "player2": RandomTexasPlayer("Random")
-        }
         # {
-        #     "name": "Texas HoldEm - Random VS Random",
-        #     "player1": RandomTexasPlayer("Random"),
+        #     "name": "Texas HoldEm - Human VS Random",
+        #     "player1": HumanTexasPlayer("Human"),
         #     "player2": RandomTexasPlayer("Random")
         # }
+        {
+            "name": "Texas HoldEm - Random VS Random",
+            "player1": RandomTexasPlayer("Random1"),
+            "player2": RandomTexasPlayer("Random2")
+        }
     ]
 
     """
     SIMULATIONS
     """
-    i = 0
     # --TexasHoldEm--
     for sim in tex_simulations:
         run_simulation(sim["name"], TexasSimulator(sim["player1"], sim["player2"]), num_iterations)
-        i = i + 1
-        print(i)
 
 
 if __name__ == "__main__":

@@ -12,15 +12,15 @@ class TexasState(State):
         self.__sequence = []
         self.__acting_player = 0
         self.__is_finished = False
-        self.__deck = []
-        self.__hands = []
-        self.__community_cards = [None, None, None, None, None]
-        self.__parsed_hands = []
         self.__bets = [1, 1]
         self.__is_showdown = False
+        # new attributes
+        self.__deck = []
+        self.__hands = [[] for _ in range(2)]
+        self.__community_cards = [None, None, None, None, None]
+        self.__parsed_hands = []
 
-    @staticmethod
-    def get_num_players():
+    def get_num_players(self):
         return 2
 
     def set_deck(self, deck):
@@ -28,7 +28,6 @@ class TexasState(State):
 
     # HANDS ATUAIS
     def get_current_hands(self):
-        print(self.__hands)
         return self.__hands
 
     # VALIDA AÇÕES
@@ -73,13 +72,13 @@ class TexasState(State):
             self.__community_cards[4] = self.__deck.pop()
         # ultima ronda de bets !!SHOWDOWN!!
         elif len(self.__sequence) == 8:
-            print(self.__sequence)
             self.__is_finished = True
 
         # swap the player
         self.__acting_player = 1 if self.__acting_player == 0 else 0
 
     def get_pot(self):
+        print(self.__bets)
         return sum(self.__bets)
 
     def get_acting_player(self) -> int:
@@ -119,14 +118,14 @@ class TexasState(State):
 
             # determine the winner based on hand value
             if player_hand_value > opponent_hand_value:
-                return pot / 2
+                return pot
             elif opponent_hand_value > player_hand_value:
-                return -(pot / 2)
+                return -pot
             else:
-                return 0
+                return pot / 2
         else:
             # this means that someone folded, so we will return the positive score to the player with the highest bet
-            return 1 if self.__bets[pos] > self.__bets[opp_pos] else -1
+            return pot if self.__bets[pos] > self.__bets[opp_pos] else pot
 
     def before_results(self):
         pass

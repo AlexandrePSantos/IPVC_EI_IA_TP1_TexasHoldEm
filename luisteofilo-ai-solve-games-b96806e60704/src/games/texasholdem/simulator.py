@@ -19,6 +19,7 @@ class TexasSimulator(GameSimulator):
 
     def init_game(self):
         shuffle(self.__deck)
+
         # assign two cards to each player
         positions = self.get_player_positions()
         for player in positions:
@@ -27,9 +28,6 @@ class TexasSimulator(GameSimulator):
             self.__deck = self.__deck[2:]
 
         return self.state
-
-    def get_remaining_cards(self):
-        return self.__deck
 
     def before_end_game(self, state: TexasState):
         # if we reached the show down, we are going to reveal the cards to all players

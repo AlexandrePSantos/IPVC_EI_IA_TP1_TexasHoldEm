@@ -46,7 +46,10 @@ class TexasPlayer(Player, ABC):
     gets the score
     """
     def get_expected_value(self):
-        return self.__score * 1.0 / self.__num_games
+        print(self.__score)
+        print(self.__num_games)
+        print(self.__score * 1.0 / self.__num_games)
+        return self.__score / self.__num_games
 
     def event_new_game(self):
         self.__num_games += 1
