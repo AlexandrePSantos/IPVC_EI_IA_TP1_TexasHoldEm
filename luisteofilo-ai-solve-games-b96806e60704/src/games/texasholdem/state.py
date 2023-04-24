@@ -1,5 +1,5 @@
 from games.texasholdem.action import TexasAction
-from games.texasholdem.card import TexasCard
+from games.texasholdem.card import Rank, Suit, TexasCard
 from games.texasholdem.evaluate import TexasEvaluator
 from games.state import State
 from typing import List
@@ -19,6 +19,7 @@ class TexasState(State):
         self.__hands = [[] for _ in range(2)]
         self.__community_cards = [None, None, None, None, None]
         self.__parsed_hands = []
+        self.__hand_values = []
 
     def get_num_players(self):
         return 2
@@ -62,23 +63,29 @@ class TexasState(State):
             for i in range(3):
                 if self.__community_cards[i] is None:
                     self.__community_cards[i] = self.__deck.pop()
+            self.__hand_values = self.calculate_hand_value()
         # segunda ronda metem mais uma carta                            !!TURN!!
         elif len(self.__sequence) == 4:
+            print(self.__hand_values)
             print(self.__sequence)
             self.__community_cards[3] = self.__deck.pop()
+            self.__hand_values = self.calculate_hand_value()
         # terceira ronda após apostas metem mais uma e será a última    !!RIVER!!
         elif len(self.__sequence) == 6:
+            print(self.__hand_values)
             print(self.__sequence)
             self.__community_cards[4] = self.__deck.pop()
+            self.__hand_values = self.calculate_hand_value()
         # ultima ronda de bets !!SHOWDOWN!!
         elif len(self.__sequence) == 8:
+            print(self.__hand_values)
             self.__is_finished = True
 
         # swap the player
         self.__acting_player = 1 if self.__acting_player == 0 else 0
 
     def get_pot(self):
-        print(self.__bets)
+        # print(self.__bets)
         return sum(self.__bets)
 
     def get_acting_player(self) -> int:
@@ -113,8 +120,8 @@ class TexasState(State):
         opp_pos = 1 if pos == 0 else 0
 
         if self.__is_showdown:
-            player_hand_value = self.calculate_hand_value()[pos]
-            opponent_hand_value = self.calculate_hand_value()[opp_pos]
+            player_hand_value = self.__hand_values[pos]
+            opponent_hand_value = self.__hand_values[opp_pos]
 
             # determine the winner based on hand value
             if player_hand_value > opponent_hand_value:
@@ -122,10 +129,18 @@ class TexasState(State):
             elif opponent_hand_value > player_hand_value:
                 return -pot
             else:
-                return pot / 2
+                if self.__bets[pos] == self.__bets[opp_pos]:
+                    return self.__bets[pos]
+                else:
+                    return pot / 2
         else:
             # this means that someone folded, so we will return the positive score to the player with the highest bet
-            return pot if self.__bets[pos] > self.__bets[opp_pos] else pot
+            if self.__bets[pos] > self.__bets[opp_pos]:
+                return pot
+            elif self.__bets[pos] == self.__bets[opp_pos]:
+                return self.__bets[pos]
+            else:
+                return 0
 
     def before_results(self):
         pass
@@ -141,16 +156,25 @@ class TexasState(State):
 
     # CONVERTER CARTAS DE STR PARA VALOR NUMERICO
     @staticmethod
-    def parse_hand(hand: List[TexasCard]) -> List[int]:
-        return [card.parse() for card in hand]
+    def parse_hand(hand: List[str]) -> List[TexasCard]:
+        parsed_hand = []
+        for card_str in hand:
+            rank_str, suit_str = card_str[:-1], card_str[-1]
+            rank = Rank[rank_str]
+            suit = Suit[suit_str]
+            card = TexasCard(rank, suit)
+            parsed_hand.append(card)
+        return parsed_hand
 
     def parse_hands(self):
         self.__parsed_hands = []
         for hand in self.__hands:
             parsed_hand = TexasState.parse_hand(hand)
             if self.__community_cards:
-                parsed_hand += TexasState.parse_hand(self.__community_cards)
+                community_card_strs = [str(card) for card in self.__community_cards]
+                parsed_hand += TexasState.parse_hand(community_card_strs)
             self.__parsed_hands.append(parsed_hand)
+        print(self.__parsed_hands)
 
     # CALCULAR HANDS
     def calculate_hand_value(self) -> List[int]:
@@ -162,34 +186,24 @@ class TexasState(State):
             cards.sort(key=lambda c: c.rank.value, reverse=True)
             # Check for highest-ranking hand first, move on to lower-ranking hands if highest-ranking not present
             if TexasEvaluator.is_royal_flush(cards):
-                print("10")
                 hand_values.append(10)
             elif TexasEvaluator.is_straight_flush(cards):
-                print("2")
                 hand_values.append(9)
             elif TexasEvaluator.is_four_of_a_kind(cards):
-                print("3")
                 hand_values.append(8)
             elif TexasEvaluator.is_full_house(cards):
-                print("4")
                 hand_values.append(7)
             elif TexasEvaluator.is_flush(cards):
-                print("5")
                 hand_values.append(6)
             elif TexasEvaluator.is_straight(cards):
-                print("6")
                 hand_values.append(5)
             elif TexasEvaluator.is_three_of_a_kind(cards):
-                print("7")
                 hand_values.append(4)
             elif TexasEvaluator.is_two_pair(cards):
-                print("8")
                 hand_values.append(3)
             elif TexasEvaluator.is_pair(cards):
-                print("9")
                 hand_values.append(2)
             else:
-                print("1")
                 hand_values.append(1)
         return hand_values
 

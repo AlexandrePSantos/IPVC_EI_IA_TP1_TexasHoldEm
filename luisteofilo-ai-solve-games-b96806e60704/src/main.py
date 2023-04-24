@@ -11,7 +11,7 @@ def run_simulation(desc: str, simulator: GameSimulator, iterations: int):
     for i in range(iterations):
         simulator.change_player_positions()
         simulator.run_simulation()
-        print(f"Iteration {i + 1}: Completed")
+        # print(f"Iteration {i + 1}: Completed")
 
     print("Results for the game:")
     simulator.print_stats()
@@ -20,7 +20,7 @@ def run_simulation(desc: str, simulator: GameSimulator, iterations: int):
 def main():
     print("ESTG IA Games Simulator")
 
-    num_iterations = 10
+    num_iterations = 1
 
     """
     PLAYERS_AND_DIFFICULTIES
