@@ -2,7 +2,12 @@ from games.game_simulator import GameSimulator
 
 from games.texasholdem.players.human import HumanTexasPlayer
 from games.texasholdem.players.random import RandomTexasPlayer
+from games.texasholdem.players.always_bet import AlwaysBetTexasHoldEmPlayer
+from games.texasholdem.players.always_pass import AlwaysPassTexasHoldEmPlayer
 from games.texasholdem.simulator import TexasSimulator
+
+from games.poker.players.random import RandomKuhnPokerPlayer
+from games.poker.simulator import KuhnPokerSimulator
 
 
 def run_simulation(desc: str, simulator: GameSimulator, iterations: int):
@@ -20,11 +25,18 @@ def run_simulation(desc: str, simulator: GameSimulator, iterations: int):
 def main():
     print("ESTG IA Games Simulator")
 
-    num_iterations = 1
+    num_iterations = 10
 
     """
     PLAYERS_AND_DIFFICULTIES
     """
+    poker_simulations = [
+        {
+            "name": "Kuhn Poker - Random VS Random",
+            "player1": RandomKuhnPokerPlayer("Random 1"),
+            "player2": RandomKuhnPokerPlayer("Random 2")
+        }
+    ]
     # --TexasHoldEm--
     tex_simulations = [
         # {
@@ -47,6 +59,9 @@ def main():
     """
     SIMULATIONS
     """
+    # for sim in poker_simulations:
+    #     run_simulation(sim["name"], KuhnPokerSimulator(sim["player1"], sim["player2"]), num_iterations)
+
     # --TexasHoldEm--
     for sim in tex_simulations:
         run_simulation(sim["name"], TexasSimulator(sim["player1"], sim["player2"]), num_iterations)

@@ -61,10 +61,10 @@ class TexasEvaluator:
 
     @staticmethod
     def is_straight(cards: List[TexasCard]) -> bool:
-        # Make a set of the card ranks
-        ranks = sorted(set(card.rank for card in cards))
+        # Make a list of the card rank values
+        ranks = sorted(card.rank.value for card in cards)
         # Check if there are 5 different ranks and the difference between the highest and lowest rank is 4
-        return len(ranks) == 5 and ranks[-1].value - ranks[0].value == 4
+        return len(set(ranks)) == 5 and ranks[-1] - ranks[0] == 4
 
     @staticmethod
     def is_three_of_a_kind(cards: List[TexasCard]) -> bool:
@@ -89,4 +89,8 @@ class TexasEvaluator:
         for rank in ranks:
             if ranks.count(rank) == 2:
                 return True
+        return False
+
+    @staticmethod
+    def is_highest_card(cards: List[TexasCard]) -> bool:
         return False

@@ -42,20 +42,7 @@ class TexasCard:
         # elif self.rank.value == 14:
         #     return f"A{self.suit.value}"
         # else:
-            return f"{self.rank.value}{self.suit.value}"
-
-    def parse(self) -> int:
-        rank_value = self.rank.value
-        if rank_value <= 10:
-            return rank_value
-        elif rank_value == 11:
-            return 11  # Jack
-        elif rank_value == 12:
-            return 12  # Queen
-        elif rank_value == 13:
-            return 13  # King
-        elif rank_value == 14:
-            return 14  # Ace
+        return f"{self.rank.value}{self.suit.value}"
 
     # HEARTS = '♥'
     # DIAMONDS = '♦'

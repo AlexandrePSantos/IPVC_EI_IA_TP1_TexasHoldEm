@@ -1,0 +1,8 @@
+URGENTE
+.Corrigir check winner
+.Verificar valor de carta mais alta de cada jogador quando valor das mãos igual
+
+EXTRAS
+.Adicionar valor inicial para apostar de cada jogador
+.Adicionar actions (FOLD, RAISE, ALL-IN, CHECK, CALL, BET)
+.Adicionar blinds
