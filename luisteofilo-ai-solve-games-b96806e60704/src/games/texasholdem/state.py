@@ -37,6 +37,9 @@ class TexasState(State):
     def get_current_hands(self):
         return self.__hands
 
+    def get_community_cards(self):
+        return self.__community_cards
+
     # VALIDA AÇÕES
     def validate_action(self, action) -> bool:
         return not self.__is_finished and action is not None
@@ -55,7 +58,6 @@ class TexasState(State):
                 if last_action == TexasAction.PASS and len(self.__sequence) == 8:
                     self.__is_finished = True
         self.__sequence.append(action)
-        # print(self.__sequence)
 
         # if someone is betting, we are going to increase its bet amount
         if action == TexasAction.BET:
@@ -67,21 +69,24 @@ class TexasState(State):
                 if self.__community_cards[i] is None:
                     self.__community_cards[i] = self.__deck.pop()
             self.__hand_values = self.calculate_hand_value()
+            # print(f"Community cards: {self.__community_cards}")
             # print(f"-> hand values: {self.__hand_values}")
         # segunda ronda metem mais uma carta                            !!TURN!!
         elif len(self.__sequence) == 4:
             self.__community_cards[3] = self.__deck.pop()
             self.__hand_values = self.calculate_hand_value()
+            # print(f"Community cards: {self.__community_cards}")
             # print(f"-> hand values: {self.__hand_values}")
         # terceira ronda após apostas metem mais uma e será a última    !!RIVER!!
         elif len(self.__sequence) == 6:
             self.__community_cards[4] = self.__deck.pop()
             self.__hand_values = self.calculate_hand_value()
+            # print(f"Community cards: {self.__community_cards}")
             # print(f"-> hand values: {self.__hand_values}")
             # self.__is_showdown = True
         # ultima ronda de bets !!SHOWDOWN!!
         elif len(self.__sequence) == 8:
-            print(f"-> sequencias: {self.__sequence}")
+            # print(f"-> sequencias: {self.__sequence}")
             self.__is_finished = True
         # swap the player
         self.__acting_player = 1 if self.__acting_player == 0 else 0
@@ -120,12 +125,9 @@ class TexasState(State):
                         return None
 
         pot = self.get_pot()
-        # print("pot: " + str(pot))
         opp_pos = 1 if pos == 0 else 0
         player_hand_value = self.__hand_values[pos]
         opponent_hand_value = self.__hand_values[opp_pos]
-        # print(f"-> 0 player: {player_hand_value}")
-        # print(f"-> 1 opponent: {opponent_hand_value}")
 
         if self.__is_showdown:
             # if there is a showdown, we will give 1 or 2 to the player with the best card and -1 or -2 to the looser
@@ -238,6 +240,3 @@ class TexasState(State):
         for action in self.__sequence:
             print('b' if action == TexasAction.BET else 'p', end="")
         print(f": pot = {self.get_pot()}")
-
-    def display_community_cards(self):
-        print("Community Cards: " + ", ".join(str(card) for card in self.__community_cards if card is not None))

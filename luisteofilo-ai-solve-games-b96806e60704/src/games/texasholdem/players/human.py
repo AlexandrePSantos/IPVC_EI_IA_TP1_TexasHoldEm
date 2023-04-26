@@ -11,7 +11,6 @@ class HumanTexasPlayer(TexasPlayer):
 
     def get_action(self, state: TexasState):
         state.display()
-        state.display_community_cards()
         return {
             "b": TexasAction.BET,
             "bet": TexasAction.BET,
@@ -20,7 +19,8 @@ class HumanTexasPlayer(TexasPlayer):
         }.get(input("Choose an action (pass/p or bet/b): "))
 
     def event_action(self, pos: int, action, new_state: State):
-        print(f"> player {pos} {action}")
+        # print(f"> player {pos} {action}")
+        pass
 
     def event_end_game(self, final_state: State):
         pass

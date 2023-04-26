@@ -13,11 +13,18 @@ class TexasSimulator(GameSimulator):
         """
         deck of cards
         """
-        self.__deck = [TexasCard(rank, suit) for rank in Rank for suit in Suit]
+        self.__original_deck = [TexasCard(rank, suit) for rank in Rank for suit in Suit]
+        self.__deck = self.__original_deck.copy()
         self.state = TexasState()
         self.state.set_deck(self.__deck)
 
+    def reset(self):
+        self.state = TexasState()
+        self.__deck = self.__original_deck.copy()
+        self.state.set_deck(self.__deck)
+
     def init_game(self):
+        self.reset()
         shuffle(self.__deck)
         hands = []
         # assign two cards to each player
