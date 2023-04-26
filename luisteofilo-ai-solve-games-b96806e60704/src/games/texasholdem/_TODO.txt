@@ -1,5 +1,5 @@
 URGENTE
-.Corrigir check winner
+.Corrigir iterações a usar sempre as mesmas cartas
 
 EXTRAS
 .Adicionar valor inicial para apostar (chips) a cada jogador em vez de incrementar 1 por bet

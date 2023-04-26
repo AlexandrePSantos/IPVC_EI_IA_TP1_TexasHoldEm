@@ -14,7 +14,6 @@ def run_simulation(desc: str, simulator: GameSimulator, iterations: int):
     print(f"----- {desc} -----")
 
     for i in range(iterations):
-        simulator.change_player_positions()
         simulator.run_simulation()
         # print(f"Iteration {i + 1}: Completed")
 
@@ -25,7 +24,7 @@ def run_simulation(desc: str, simulator: GameSimulator, iterations: int):
 def main():
     print("ESTG IA Games Simulator")
 
-    num_iterations = 1
+    num_iterations = 10
 
     """
     PLAYERS_AND_DIFFICULTIES
@@ -49,10 +48,15 @@ def main():
         #     "player1": HumanTexasPlayer("Human"),
         #     "player2": RandomTexasPlayer("Random")
         # }
+        # {
+        #     "name": "Texas HoldEm - Random VS Random",
+        #     "player1": RandomTexasPlayer("Random1"),
+        #     "player2": RandomTexasPlayer("Random2")
+        # }
         {
             "name": "Texas HoldEm - Random VS Random",
-            "player1": RandomTexasPlayer("Random1"),
-            "player2": RandomTexasPlayer("Random2")
+            "player1": AlwaysBetTexasHoldEmPlayer("Always Bet"),
+            "player2": AlwaysPassTexasHoldEmPlayer("Always Pass")
         }
     ]
 
