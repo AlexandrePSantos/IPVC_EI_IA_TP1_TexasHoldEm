@@ -1,8 +1,15 @@
 URGENTE
 .Corrigir check winner
-.Verificar valor de carta mais alta de cada jogador quando valor das mãos igual
 
 EXTRAS
-.Adicionar valor inicial para apostar de cada jogador
-.Adicionar actions (FOLD, RAISE, ALL-IN, CHECK, CALL, BET)
-.Adicionar blinds
+.Adicionar valor inicial para apostar (chips) a cada jogador em vez de incrementar 1 por bet
+.Adicionar actions (FOLD, RAISE, ALL-IN, CHECK, CALL, BET) apenas tem BET e PASS no estado atual
+.Adicionar blinds á primeira ronda de apostas
+
+PLAYERS
+.Human (DONE)
+.Random (DONE)
+.Always_bet (DONE)
+.Always_pass (DONE)
+.Monte Carlo (árvore curta) -> dificuldade baixa
+.Monte Carlo (árvore longa) -> dificuldade alta

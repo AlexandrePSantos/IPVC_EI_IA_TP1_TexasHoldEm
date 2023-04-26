@@ -25,7 +25,7 @@ def run_simulation(desc: str, simulator: GameSimulator, iterations: int):
 def main():
     print("ESTG IA Games Simulator")
 
-    num_iterations = 10
+    num_iterations = 1
 
     """
     PLAYERS_AND_DIFFICULTIES

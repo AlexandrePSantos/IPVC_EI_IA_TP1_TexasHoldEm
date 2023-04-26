@@ -119,21 +119,22 @@ class TexasState(State):
 
         pot = self.get_pot()
         # print("pot: " + str(pot))
-        opp_pos = 1 if pos == 0 else 0
+        opp_pos = 1
+        # opp_pos = 1 if pos == 0 else 0
         player_hand_value = self.__hand_values[pos]
         opponent_hand_value = self.__hand_values[opp_pos]
         print(f"-> 0 player: {player_hand_value}")
         print(f"-> 1 opponent: {opponent_hand_value}")
-        #TODO - I WAS HERE
+        # TODO - I WAS HERE
         # NÃO ESTÁ A DAR O DINHEIRO DIREITO
         # TODO - I WAS HERE
         if self.__is_showdown:
             # if there is a showdown, we will give 1 or 2 to the player with the best card and -1 or -2 to the looser
             if player_hand_value > opponent_hand_value:
-                print(pot)
+                # print(pot)
                 return 1 * pot
             elif player_hand_value == opponent_hand_value:
-                print(pot)
+                # print(pot)
                 return 1 * (pot / 2)
             else:
                 return -1 * pot
@@ -193,7 +194,7 @@ class TexasState(State):
         self.__parsed_hands[0] += parsed_community_cards
         self.__parsed_hands[1] += parsed_community_cards
         # print(f"comm_hands: {self.__community_cards}")
-        # print(f" hands: {self.__parsed_hands}")
+        print(f" hands: {self.__parsed_hands}")
         return self.__parsed_hands
 
     def calculate_hand_value(self):
@@ -220,7 +221,16 @@ class TexasState(State):
                 hand_values.append(2)
             else:
                 hand_values.append(1)
-        # print(f"-> hand values: {hand_values}")
+        print(f"-> hand values: {hand_values}")
+        # se ambos tiverem o mesmo valor será tida em conta a carta com rank mais alto
+        # quem tem a carta mais alta ganha, se nenhum tiver uma carta mais alta é dividido o pot pelos 2
+        if len(set(hand_values)) == 1:
+            max_card_ranks = [max(hand, key=lambda c: c.rank.value).rank.value for hand in self.__parsed_hands]
+            max_rank = max(max_card_ranks)
+            for i, rank in enumerate(max_card_ranks):
+                if rank == max_rank:
+                    hand_values[i] += 0.1
+            print(f"-> hand values (same vals): {hand_values}")
         return hand_values
 
     # DISPLAY
@@ -231,26 +241,3 @@ class TexasState(State):
 
     def display_community_cards(self):
         print("Community Cards: " + ", ".join(str(card) for card in self.__community_cards if card is not None))
-
-""" To try later:
-if hand_values[1] == 1 and hand_values[1] == 1:
-    # calcular qual maior nr
-    aux = 0
-    i = 0
-    handbest = []
-    for hand in self.__parsed_hands:
-        for card in hand:
-            if card[:-1] > aux:
-                aux = card[:-1]
-        handbest[i] = aux
-        i = i + 1
-    if handbest[0] > handbest[1]:
-        hand_values[0] = 1
-        hand_values[1] = 0
-    elif handbest[0] < handbest[1]:
-        hand_values[0] = 0
-        hand_values[1] = 1
-    else:
-        hand_values[0] = 1
-        hand_values[1] = 1
-"""
