@@ -4,6 +4,8 @@ from games.texasholdem.players.human import HumanTexasPlayer
 from games.texasholdem.players.random import RandomTexasPlayer
 from games.texasholdem.players.always_bet import AlwaysBetTexasHoldEmPlayer
 from games.texasholdem.players.always_pass import AlwaysPassTexasHoldEmPlayer
+from games.texasholdem.players.algoeasy import AlgoEasy
+from games.texasholdem.players.algohard import AlgoHard
 from games.texasholdem.simulator import TexasSimulator
 
 
@@ -11,6 +13,7 @@ def run_simulation(desc: str, simulator: GameSimulator, iterations: int):
     print(f"----- {desc} -----")
 
     for i in range(iterations):
+        print(f"Iteration {i + 1}")
         simulator.run_simulation()
 
     print("Results for the game:")
@@ -41,17 +44,13 @@ def main():
     player_type()
     p1 = int(input("Insert the type for player 1: "))
     if p1 == 1:
-        player1 = HumanTexasPlayer
-        name1 = "Human"
+        player1, name1 = HumanTexasPlayer, "Human"
     elif p1 == 2:
-        player1 = AlwaysBetTexasHoldEmPlayer
-        name1 = "Always Bet"
+        player1, name1 = AlwaysBetTexasHoldEmPlayer, "Always Bet"
     elif p1 == 3:
-        player1 = AlwaysPassTexasHoldEmPlayer
-        name1 = "Always Pass"
+        player1, name1 = AlwaysPassTexasHoldEmPlayer, "Always Pass"
     elif p1 == 4:
-        player1 = RandomTexasPlayer
-        name1 = "Random"
+        player1, name1 = RandomTexasPlayer, "Random"
 
     p2 = int(input("Insert the type for player 2: "))
     if p2 == 1:

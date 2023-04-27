@@ -1,21 +1,19 @@
-from random import choice
-
 from games.texasholdem.action import TexasAction
 from games.texasholdem.player import TexasPlayer
 from games.texasholdem.state import TexasState
 from games.state import State
 
 
-class RandomTexasPlayer(TexasPlayer):
+class AlgoHard(TexasPlayer):
 
     def __init__(self, name):
         super().__init__(name)
 
-    @staticmethod
-    def get_action(state: TexasState):
-        return choice([TexasAction.BET, TexasAction.PASS])
+    def get_action(self, state: TexasState):
+        return TexasAction.BET
 
     def event_action(self, pos: int, action, new_state: State):
+        # ignore
         pass
 
     def event_end_game(self, final_state: State):

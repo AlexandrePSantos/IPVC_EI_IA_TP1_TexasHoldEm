@@ -7,14 +7,12 @@ class TexasAction(Enum):
     a bet is either a regular bet (no money in the table) or a call (if there is a bet)
     """
     PASS = 0,
-    BET = 1
+    BET = 1,
+    RAISE = 2
 
-    # FOLD = 0
-    # CHECK = 1
-    # CALL = 2
-    # RAISE = 3
-    # BET = 4
-    # ALLIN = 5
+    # 0 - PASS -> FOLD e um CHECK
+    # 1 - BET -> iguala ás mão do oponente se for mais alta
+    # 2 - RAISE ->  mete +1 que o valor do oponente
 
     # FOLD -> desiste da mão
     # CHECK -> desiste da ronda atual mas continua com a mão

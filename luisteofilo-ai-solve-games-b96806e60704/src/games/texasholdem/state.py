@@ -13,8 +13,8 @@ class TexasState(State):
         self.__sequence = []
         self.__acting_player = 0
         self.__is_finished = False
-        self.__bets = [1, 1]
         self.__is_showdown = False
+        self.__bets = [1, 2]
         # new attributes
         self.__deck = []
         self.__hands = [[] for _ in range(2)]
@@ -59,9 +59,15 @@ class TexasState(State):
                     self.__is_finished = True
         self.__sequence.append(action)
 
+        oth_player = 1 if self.__acting_player == 0 else 0
+
         # if someone is betting, we are going to increase its bet amount
         if action == TexasAction.BET:
-            self.__bets[self.__acting_player] += 1
+            self.__bets[self.__acting_player] = self.__bets[oth_player]
+
+
+
+        print(self.__bets)
 
         # primeira ronda de apostas feita metem tres cards na mesa      !!FLOP!!
         if len(self.__sequence) == 2:
@@ -69,27 +75,33 @@ class TexasState(State):
                 if self.__community_cards[i] is None:
                     self.__community_cards[i] = self.__deck.pop()
             self.__hand_values = self.calculate_hand_value()
-            # print(f"Community cards: {self.__community_cards}")
-            # print(f"-> hand values: {self.__hand_values}")
+
         # segunda ronda metem mais uma carta                            !!TURN!!
         elif len(self.__sequence) == 4:
             self.__community_cards[3] = self.__deck.pop()
             self.__hand_values = self.calculate_hand_value()
-            # print(f"Community cards: {self.__community_cards}")
-            # print(f"-> hand values: {self.__hand_values}")
+
         # terceira ronda após apostas metem mais uma e será a última    !!RIVER!!
         elif len(self.__sequence) == 6:
             self.__community_cards[4] = self.__deck.pop()
             self.__hand_values = self.calculate_hand_value()
-            # print(f"Community cards: {self.__community_cards}")
-            # print(f"-> hand values: {self.__hand_values}")
-            # self.__is_showdown = True
-        # ultima ronda de bets !!SHOWDOWN!!
+            print(f"Hands: {self.__hands}")
+            print(f"Community cards: {self.__community_cards}")
+            print(f"-> hand values: {self.__hand_values}")
+            self.__is_showdown = True
+
         elif len(self.__sequence) == 8:
-            # print(f"-> sequencias: {self.__sequence}")
             self.__is_finished = True
+
         # swap the player
         self.__acting_player = 1 if self.__acting_player == 0 else 0
+
+    # DISPLAY
+    def display(self):
+        for action in self.__sequence:
+            print('b' if action == TexasAction.BET else 'p', end="")
+        print(f": pot = {self.get_pot()}")
+        print(f"comm_hands: {self.__community_cards}")
 
     def get_pot(self):
         return sum(self.__bets)
@@ -106,8 +118,6 @@ class TexasState(State):
         cloned.__acting_player = self.__acting_player
         for i in range(0, len(self.__hands)):
             cloned.__hands[i] = self.__hands[i]
-            # print(f"cloned hands: {cloned.__hands[i]}")
-        # print(f"comm cards: {self.__community_cards}")
         cloned.__is_showdown = self.__is_showdown
         return cloned
 
@@ -137,7 +147,7 @@ class TexasState(State):
             elif player_hand_value == opponent_hand_value:
                 # print(pot)
                 return 1 * (pot / 2)
-            else:
+            elif player_hand_value < opponent_hand_value:
                 return -1 * pot
             # return (1 if player_hand_value > opponent_hand_value else -1) * pot
         else:
@@ -232,11 +242,6 @@ class TexasState(State):
             for i, rank in enumerate(max_card_ranks):
                 if rank == max_rank:
                     hand_values[i] += 0.1
-            # print(f"-> hand values (same vals): {hand_values}")
+            # print(f"-> hand values: {self.__hands}")
+            # print(f"-> hand values: {hand_values}")
         return hand_values
-
-    # DISPLAY
-    def display(self):
-        for action in self.__sequence:
-            print('b' if action == TexasAction.BET else 'p', end="")
-        print(f": pot = {self.get_pot()}")

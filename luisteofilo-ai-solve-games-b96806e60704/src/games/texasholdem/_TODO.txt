@@ -1,15 +1,17 @@
-URGENTE
-.Corrigir iterações a usar sempre as mesmas cartas
+FINAL
+.Corrigir Actions atuais:
+    PASS fica como está,
+    BET é um call que vai igualar as mãos,
+    RAISE vai igualar ao oponente e aumentar 1
 
-EXTRAS
-.Adicionar valor inicial para apostar (chips) a cada jogador em vez de incrementar 1 por bet
-.Adicionar actions (FOLD, RAISE, ALL-IN, CHECK, CALL, BET) apenas tem BET e PASS no estado atual
-.Adicionar blinds á primeira ronda de apostas
+EXTRA
+.Corrigir o evaluate hand, não usar a carta mais alta num desempate, valor do ranking atual + o que o constitui
+(caso dê demasiado trabalho mudar para biblioteca poker)
 
 PLAYERS
 .Human (DONE)
 .Random (DONE)
 .Always_bet (DONE)
 .Always_pass (DONE)
-.Monte Carlo (árvore curta) -> dificuldade baixa
-.Monte Carlo (árvore longa) -> dificuldade alta
+.CFR (árvore curta) -> dificuldade baixa
+.CFR (árvore longa) -> dificuldade alta

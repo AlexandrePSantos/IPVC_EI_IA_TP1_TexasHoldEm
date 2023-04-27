@@ -10,6 +10,7 @@ class HumanTexasPlayer(TexasPlayer):
         super().__init__(name)
 
     def get_action(self, state: TexasState):
+        print(f"> You are player human {self.get_current_pos()} with cards {self.get_current_hand()}")
         state.display()
         return {
             "b": TexasAction.BET,
@@ -19,7 +20,7 @@ class HumanTexasPlayer(TexasPlayer):
         }.get(input("Choose an action (pass/p or bet/b): "))
 
     def event_action(self, pos: int, action, new_state: State):
-        # print(f"> player {pos} {action}")
+        print(f"> player {pos} {action}")
         pass
 
     def event_end_game(self, final_state: State):
@@ -27,7 +28,3 @@ class HumanTexasPlayer(TexasPlayer):
 
     def event_result(self, pos: int, result: int):
         print(f"> player {pos} got ${result}")
-
-    def event_new_game(self):
-        print("--- New game ---")
-        print(f"> You are player {self.get_current_pos()} with cards {self.get_current_hand()}")
