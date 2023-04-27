@@ -4,7 +4,7 @@ from games.texasholdem.state import TexasState
 from games.state import State
 
 
-class AlgoEasy(TexasPlayer):
+class CFRHardTexasPlayer(TexasPlayer):
 
     def __init__(self, name):
         super().__init__(name)

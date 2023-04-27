@@ -1,5 +1,4 @@
 from games.texasholdem.action import TexasAction
-from games.texasholdem.player import TexasPlayer
 from games.texasholdem.card import Rank, Suit, TexasCard
 from games.texasholdem.evaluate import TexasEvaluator
 from games.state import State
@@ -37,6 +36,9 @@ class TexasState(State):
     def get_current_hands(self):
         return self.__hands
 
+    def get_bets(self):
+        return self.__bets
+
     def get_community_cards(self):
         return self.__community_cards
 
@@ -47,51 +49,31 @@ class TexasState(State):
     # ATUALIZAR ESTADO D JOGO
     def update(self, action):
         # only need to check the outcome of the action if none was added until now
-        if len(self.__sequence) > 0:
-            last_action = self.__sequence[-1]
-            if last_action == TexasAction.BET and len(self.__sequence) == 6:
+        if action == TexasAction.CALL or action == TexasAction.RAISE or action == TexasAction.PASS:
+            if len(self.__sequence) == 7:
+                self.__is_finished = True
+            elif len(self.__sequence) == 6:      # fourth round (river)
+                self.__community_cards[4] = self.__deck.pop()
+                self.__hand_values = self.calculate_hand_value()
                 self.__is_showdown = True
-                if last_action == TexasAction.BET and len(self.__sequence) == 8:
-                    self.__is_finished = True
-            elif last_action == TexasAction.PASS and len(self.__sequence) == 6:
-                self.__is_showdown = True
-                if last_action == TexasAction.PASS and len(self.__sequence) == 8:
-                    self.__is_finished = True
+            elif len(self.__sequence) == 4:    # third round (turn)
+                self.__community_cards[3] = self.__deck.pop()
+                self.__hand_values = self.calculate_hand_value()
+            elif len(self.__sequence) == 2:    # second round (flop)
+                for i in range(3):
+                    if self.__community_cards[i] is None:
+                        self.__community_cards[i] = self.__deck.pop()
+                self.__hand_values = self.calculate_hand_value()
         self.__sequence.append(action)
+        print(self.__sequence)
 
         oth_player = 1 if self.__acting_player == 0 else 0
 
         # if someone is betting, we are going to increase its bet amount
-        if action == TexasAction.BET:
+        if action == TexasAction.CALL:
             self.__bets[self.__acting_player] = self.__bets[oth_player]
-
-
-
-        print(self.__bets)
-
-        # primeira ronda de apostas feita metem tres cards na mesa      !!FLOP!!
-        if len(self.__sequence) == 2:
-            for i in range(3):
-                if self.__community_cards[i] is None:
-                    self.__community_cards[i] = self.__deck.pop()
-            self.__hand_values = self.calculate_hand_value()
-
-        # segunda ronda metem mais uma carta                            !!TURN!!
-        elif len(self.__sequence) == 4:
-            self.__community_cards[3] = self.__deck.pop()
-            self.__hand_values = self.calculate_hand_value()
-
-        # terceira ronda após apostas metem mais uma e será a última    !!RIVER!!
-        elif len(self.__sequence) == 6:
-            self.__community_cards[4] = self.__deck.pop()
-            self.__hand_values = self.calculate_hand_value()
-            print(f"Hands: {self.__hands}")
-            print(f"Community cards: {self.__community_cards}")
-            print(f"-> hand values: {self.__hand_values}")
-            self.__is_showdown = True
-
-        elif len(self.__sequence) == 8:
-            self.__is_finished = True
+        if action == TexasAction.RAISE:
+            self.__bets[self.__acting_player] = self.__bets[oth_player] + 1
 
         # swap the player
         self.__acting_player = 1 if self.__acting_player == 0 else 0
@@ -99,9 +81,11 @@ class TexasState(State):
     # DISPLAY
     def display(self):
         for action in self.__sequence:
-            print('b' if action == TexasAction.BET else 'p', end="")
-        print(f": pot = {self.get_pot()}")
-        print(f"comm_hands: {self.__community_cards}")
+            print('c' if action == TexasAction.CALL else 'r' if action == TexasAction.RAISE else 'p', end="")
+        print(f": Pot = {self.get_pot()}")
+        print(f": Bets = {self.get_bets()}")
+        print(f": Community cards: {self.get_community_cards()}")
+        print(" ")
 
     def get_pot(self):
         return sum(self.__bets)
@@ -205,7 +189,7 @@ class TexasState(State):
                 parsed_community_cards.append(card)
         self.__parsed_hands[0] += parsed_community_cards
         self.__parsed_hands[1] += parsed_community_cards
-        # print(f"comm_hands: {self.__community_cards}")
+        # print(f"community cards: {self.__community_cards}")
         # print(f" hands: {self.__parsed_hands}")
         return self.__parsed_hands
 

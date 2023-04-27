@@ -1,10 +1,4 @@
 FINAL
-.Corrigir Actions atuais:
-    PASS fica como está,
-    BET é um call que vai igualar as mãos,
-    RAISE vai igualar ao oponente e aumentar 1
-
-EXTRA
 .Corrigir o evaluate hand, não usar a carta mais alta num desempate, valor do ranking atual + o que o constitui
 (caso dê demasiado trabalho mudar para biblioteca poker)
 

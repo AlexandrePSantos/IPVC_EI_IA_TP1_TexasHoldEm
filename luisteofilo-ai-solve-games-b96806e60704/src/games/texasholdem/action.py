@@ -7,7 +7,7 @@ class TexasAction(Enum):
     a bet is either a regular bet (no money in the table) or a call (if there is a bet)
     """
     PASS = 0,
-    BET = 1,
+    CALL = 1,
     RAISE = 2
 
     # 0 - PASS -> FOLD e um CHECK
