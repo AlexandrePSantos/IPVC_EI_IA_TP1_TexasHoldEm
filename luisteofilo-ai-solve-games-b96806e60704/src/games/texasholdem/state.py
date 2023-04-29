@@ -48,26 +48,32 @@ class TexasState(State):
 
     # ATUALIZAR ESTADO D JOGO
     def update(self, action):
-        # only need to check the outcome of the action if none was added until now
+        self.__sequence.append(action)
+
         if action == TexasAction.CALL or action == TexasAction.RAISE or action == TexasAction.PASS:
-            if len(self.__sequence) == 7:
+            if len(self.__sequence) == 8:
                 self.__is_finished = True
+                self.__is_showdown = True
             elif len(self.__sequence) == 6:      # fourth round (river)
+                print(f"\n> Round 4 - River <")
                 self.__community_cards[4] = self.__deck.pop()
                 self.__hand_values = self.calculate_hand_value()
-                self.__is_showdown = True
+                print(f"> Community cards: {self.__community_cards}")
             elif len(self.__sequence) == 4:    # third round (turn)
+                print(f"\n> Round 3 - Turn <")
                 self.__community_cards[3] = self.__deck.pop()
                 self.__hand_values = self.calculate_hand_value()
+                print(f"> Community cards: {self.__community_cards}")
             elif len(self.__sequence) == 2:    # second round (flop)
+                print(f"\n> Round 2 - Flop <")
                 for i in range(3):
                     if self.__community_cards[i] is None:
                         self.__community_cards[i] = self.__deck.pop()
                 self.__hand_values = self.calculate_hand_value()
-        self.__sequence.append(action)
-        print(self.__sequence)
+                print(f"> Community cards: {self.__community_cards}")
 
         oth_player = 1 if self.__acting_player == 0 else 0
+        # print(self.__sequence)
 
         # if someone is betting, we are going to increase its bet amount
         if action == TexasAction.CALL:
@@ -80,12 +86,8 @@ class TexasState(State):
 
     # DISPLAY
     def display(self):
-        for action in self.__sequence:
-            print('c' if action == TexasAction.CALL else 'r' if action == TexasAction.RAISE else 'p', end="")
         print(f": Pot = {self.get_pot()}")
-        print(f": Bets = {self.get_bets()}")
-        print(f": Community cards: {self.get_community_cards()}")
-        print(" ")
+        print(f": Bets = {self.get_bets()}\n")
 
     def get_pot(self):
         return sum(self.__bets)
@@ -217,7 +219,6 @@ class TexasState(State):
                 hand_values.append(2)
             else:
                 hand_values.append(1)
-        # print(f"-> hand values: {hand_values}")
         # se ambos tiverem o mesmo valor será tida em conta a carta com rank mais alto
         # quem tem a carta mais alta ganha, se nenhum tiver uma carta mais alta é dividido o pot pelos 2
         if len(set(hand_values)) == 1:
@@ -226,6 +227,4 @@ class TexasState(State):
             for i, rank in enumerate(max_card_ranks):
                 if rank == max_rank:
                     hand_values[i] += 0.1
-            # print(f"-> hand values: {self.__hands}")
-            # print(f"-> hand values: {hand_values}")
         return hand_values

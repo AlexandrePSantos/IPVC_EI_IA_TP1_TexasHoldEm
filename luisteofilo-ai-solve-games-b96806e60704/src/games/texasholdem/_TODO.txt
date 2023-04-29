@@ -1,11 +1,5 @@
 FINAL
 .Corrigir o evaluate hand, não usar a carta mais alta num desempate, valor do ranking atual + o que o constitui
-(caso dê demasiado trabalho mudar para biblioteca poker)
-
-PLAYERS
-.Human (DONE)
-.Random (DONE)
-.Always_bet (DONE)
-.Always_pass (DONE)
+(caso dê demasiado trabalho, mudar para biblioteca poker)
 .CFR (árvore curta) -> dificuldade baixa
 .CFR (árvore longa) -> dificuldade alta

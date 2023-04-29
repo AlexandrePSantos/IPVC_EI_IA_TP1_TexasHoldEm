@@ -11,29 +11,25 @@ from games.texasholdem.simulator import TexasSimulator
 
 
 def run_simulation(desc: str, simulator: GameSimulator, iterations: int):
-    print(f"----- {desc} -----")
+    print(f"\n----- {desc} -----")
 
     for i in range(iterations):
-        print(f"Game nº{i + 1}")
+        print(f"Game nº{i + 1}\n")
+        print(f"> Round 1 - Pre Flop <")
         simulator.run_simulation()
 
-    print("Results for the game:")
+    print(f"\nResults for the game:")
     simulator.print_stats()
 
 
 def player_type():
-    print("1 - Human")
-    print("2 - Always Call")
-    print("3 - Always Raise")
-    print("4 - Always Pass")
-    print("5 - Random")
-    print("6 - CFR Easy")
-    print("7 - CFR Hard")
+    print(f"\n> Player types <")
+    print(f"1 - Human\n2 - Always Call\n3 - Always Raise\n4 - Always Pass\n5 - Random\n6 - CFR Easy\n7 - CFR Hard")
 
 
 def main():
     player1, player2, name1, name2 = 0, 0, "", ""
-    print("ESTG IA Games Simulator")
+    print(f"\nESTG IA Games Simulator")
 
     """ ITERATIONS """
     num_iterations = int(input("Number of iterations: "))
