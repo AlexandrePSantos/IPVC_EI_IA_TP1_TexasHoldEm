@@ -191,34 +191,22 @@ class TexasState(State):
                 parsed_community_cards.append(card)
         self.__parsed_hands[0] += parsed_community_cards
         self.__parsed_hands[1] += parsed_community_cards
-        # print(f"community cards: {self.__community_cards}")
-        # print(f" hands: {self.__parsed_hands}")
         return self.__parsed_hands
 
     def calculate_hand_value(self):
         self.parse_hands()
         hand_values = []
         for hand in self.__parsed_hands:
-            if TexasEvaluator.is_royal_flush(hand):
-                hand_values.append(10)
-            elif TexasEvaluator.is_straight_flush(hand):
-                hand_values.append(9)
-            elif TexasEvaluator.is_four_of_a_kind(hand):
-                hand_values.append(8)
-            elif TexasEvaluator.is_full_house(hand):
-                hand_values.append(7)
-            elif TexasEvaluator.is_flush(hand):
-                hand_values.append(6)
-            elif TexasEvaluator.is_straight(hand):
-                hand_values.append(5)
-            elif TexasEvaluator.is_three_of_a_kind(hand):
-                hand_values.append(4)
-            elif TexasEvaluator.is_two_pair(hand):
-                hand_values.append(3)
-            elif TexasEvaluator.is_pair(hand):
-                hand_values.append(2)
-            else:
-                hand_values.append(1)
+            hand_values.append(10 if TexasEvaluator.is_royal_flush(hand) else
+                               9 if TexasEvaluator.is_straight_flush(hand) else
+                               8 if TexasEvaluator.is_four_of_a_kind(hand) else
+                               7 if TexasEvaluator.is_full_house(hand) else
+                               6 if TexasEvaluator.is_flush(hand) else
+                               5 if TexasEvaluator.is_straight(hand) else
+                               4 if TexasEvaluator.is_three_of_a_kind(hand) else
+                               3 if TexasEvaluator.is_two_pair(hand) else
+                               2 if TexasEvaluator.is_pair(hand) else
+                               1)
         # se ambos tiverem o mesmo valor será tida em conta a carta com rank mais alto
         # quem tem a carta mais alta ganha, se nenhum tiver uma carta mais alta é dividido o pot pelos 2
         if len(set(hand_values)) == 1:
@@ -227,4 +215,5 @@ class TexasState(State):
             for i, rank in enumerate(max_card_ranks):
                 if rank == max_rank:
                     hand_values[i] += 0.1
+        # print(hand_values)
         return hand_values
