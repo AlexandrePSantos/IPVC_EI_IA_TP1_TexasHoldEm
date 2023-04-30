@@ -13,6 +13,7 @@ class RandomTexasPlayer(TexasPlayer):
 
     @staticmethod
     def get_action(state: TexasState):
+        state.display()
         return choice([TexasAction.CALL, TexasAction.RAISE, TexasAction.PASS])
 
     def event_action(self, pos: int, action, new_state: State):

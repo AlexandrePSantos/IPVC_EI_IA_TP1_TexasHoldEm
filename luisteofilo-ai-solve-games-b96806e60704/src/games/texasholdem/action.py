@@ -10,8 +10,8 @@ class TexasAction(Enum):
     CALL = 1,
     RAISE = 2
 
-    # 0 - PASS -> FOLD e um CHECK
-    # 1 - BET -> iguala ás mão do oponente se for mais alta
+    # 0 - PASS -> FOLD ou CHECK
+    # 1 - CALL -> iguala ás mão do oponente se for mais alta
     # 2 - RAISE ->  mete +1 que o valor do oponente
 
     # FOLD -> desiste da mão

@@ -1,82 +1,33 @@
 RULES -> TEXAS HOLD'EM:
 -52 CARTAS;
--VALOR PARA APOSTAR INICIAL;
--SHUFFLE DO BARALHO NO INICIO FEITO PELO DEALER;
--DEALER SERÃO OS JOGADORES;
--A CADA TURNO MUDA O DEALER PARA O JOGADOR SEGUINTE;
--JOGADOR NÃO DEALER É O PRIMEIRO A APOSTAR;
--CADA JOGADOR RECEBE DUAS CARTAS;
--5 CARTAS NA MESA (HAND RANKINGS LOWEST TO HIGHEST) NO FIM DE CADA RONDA:
-	-HIGH: CARTA MAIS ALTA DA MÃO
-	-PAIR: 2 CARTAS IGUAIS
-	-TWO PAIR: 2 VEZES O DE CIMA	
-	-THREE OF A KIND: 3 CARTAS IGUAIS
-	-STRAIGHT: 5 CARTAS ORDENADAS
-	-FLUSH: 5 CARTAS DO MESMO NAIPE (MESMO BONEQUINHO)
-	-FULL HOUSE: THREE OF A KIND + PAIR
-	-FOUR OF A KIND/QUADS: 4 CARTAS IGUAIS
-	-STRAIGHT FLUSH: 5 CARTAS DO MESMO NAIPE ORDENADAS
-	-ROYAL FLUSH: 5 CARTAS DO MESMO NAIPE DO 10, J, Q, K, A
--SMALL BLIND COMEÇA NO PLAYER 1 (APOSTA PEQUENA);
--BIG BLIND COMEÇA NO PLAYER 2 (APOSTA GRANDE);
--DEPOIS DE APOSTAR CADA PLAYER RECEBE DUAS CARTAS APENAS VISIVEIS AO PLAYER CORRESPONDENTE;
--JOGADAS POSSÍVEIS:
-	-FOLD: DESISTIR
-	-CALL: AUMENTAR A APOSTA PARA O MESMO QUE O BIG BLIND
-	-RAISING: AUMENTAR A APOSTA PARA UM VALOR MAIOR QUE O BIG BLIND
--APÓS AMBOS JOGAREM É SOMADO O TOTAL DAS APOSTAS QUE SERÁ A REWARD DE QUEM VENCER
--THE FLOP: SÃO COLOCADAS 3 CARTAS NA MESA VISIVEIS PARA AMBOS;
--APOSTAM NOVAMENTE;
--THE TURN: É ACRESCENTADA UMA CARTA AO FLOP;
--CHECK: PASSA A VEZ;
--THE RIVER: ADICIONA ULTIMA CARTA AO FLOP;
--APOSTAM NOVAMENTE;
--COMPARAR CARTAS DA MÃO DE CADA JOGADOR COM CARTAS DA MESA E VER QUAL O RANK;
--QUEM TIVER RANK MAIS ALTO GANHA A MÃO E FICA COM A SOMA DOS VALORES APOSTADOS;
--GANHA QUEM FICAR COM O VALOR INICIAL TODO;
+-VALOR DE APOSTA INICIAL:
+	-Small Blind: APOSTA MAIS BAIXA;
+	-Big Blind: APOSTA MAIS ALTA;
+-SHUFFLE DO BARALHO NO INICIO;
+-POT É A SOMA DE TODAS AS APOSTAS DOS JOGADORES E SERÁ O PRÉMIO DO VENCEDOR;
+-NO INICIO DO JOGO CADA JOGADOR RECEBE DUAS CARTAS (HANDS) APENAS VISIVEIS PARA ELES MESMOS;
+-AÇÕES POSSÍVEIS:
+	-CHECK: PASSAR A VEZ/DESISTIR DA MÃO;
+	-CALL: IGUALAR Á APOSTA MAIS ALTA;
+	-RAISE: APOSTAR UM VALOR MAIS ALTO QUE A APOSTA ATUAL;
 
-GPT:
+-EXISTEM 5 RONDAS:
+	-PREFLOP: PRIMEIRA RONDA DE APOSTAS SEM CARTAS COMUNITÁRIAS (BLINDS INICIAIS);
+	-FLOP: PRIMEIRAS 3 CARTAS COMUNITÁRIAS NA MESA E SÃO FEITAS APOSTAS;
+	-TURN: QUARTA CARTA COMUNITÁRIA NA MESA E SÃO FEITAS APOSTAS;
+	-RIVER: QUINTA CARTA COMUNITÁRIA E ÚLTIMA NA MESA E SÃO FEITAS APOSTAS;
+	-SHOWDOWN: REVELAM-SE AS MÃOS DOS JOGADORES E DECIDE-SE O VENCEDOR;
 
-1 - Define the Rules: Start by defining the basic rules of the game, which will determine how the game is played. In this case, we will use the following rules:
-	Each player is dealt two private cards
-	There is a round of betting
-	Three community cards are dealt face up
-	There is a second round of betting
-	A fourth community card is dealt face up
-	There is a third round of betting
-	A fifth and final community card is dealt face up
-	There is a final round of betting
-	The player with the best five-card hand, using any combination of their two private cards and the five community cards, wins the pot.
-
-2 - Define the Game State: Create a data structure to keep track of the game state. This data structure should include the following elements:
-	Deck of cards
-	Two player hands
-	Community cards
-	Pot
-	Current bet
-
-3 - Shuffle the Deck: Shuffle the deck of cards to randomize the order of the cards.
-
-4 - Deal the Cards: Deal two private cards to each player, starting with the first player, then the second player.
-
-5 - First Round of Betting: Start the first round of betting, with the first player to act based on the table position. The players can either call, raise, or fold. If a player raises, the next player must match that bet or fold. If a player folds, they forfeit their hand and any bets they've made.
-
-6 - Deal the Flop: After the first round of betting is complete, deal three community cards face up on the table. This is known as the "flop".
-
-7 - Second Round of Betting: Start the second round of betting, with the first player to act based on the table position. The players can either call, raise, or fold.
-
-8 - Deal the Turn: After the second round of betting is complete, deal a fourth community card face up on the table. This is known as the "turn".
-
-9 - Third Round of Betting: Start the third round of betting, with the first player to act based on the table position. The players can either call, raise, or fold.
-
-10 - Deal the River: After the third round of betting is complete, deal a fifth and final community card face up on the table. This is known as the "river".
-
-11 - Final Round of Betting: Start the final round of betting, with the first player to act based on the table position. The players can either call, raise, or fold.
-
-12 - Determine the Winner: After the final round of betting is complete, determine the winner of the hand. The winner is the player with the best five-card hand, using any combination of their two private cards and the five community cards. If there is a tie, the pot is split between the tied players.
-
-13 - Update the Game State: Update the game state by distributing the pot to the winner and resetting the deck, hands, and community cards for the next hand.
-
-14 - Repeat: Repeat steps 4-13 for as many hands as desired.
-
+-NO SHOWDOWN REALIZA-SE O CÁLCULO DOS HAND RANKINGS:
+>Rankings de HANDS (LOWEST TO HIGHEST):
+	-HIGH: CARTA MAIS ALTA DA MÃO;
+	-PAIR: 2 CARTAS IGUAIS;
+	-TWO PAIR: 2 PARES DE CARTAS IGUAIS;
+	-THREE OF A KIND: 3 CARTAS IGUAIS;
+	-STRAIGHT: 5 CARTAS ORDENADAS;
+	-FLUSH: 5 CARTAS DO MESMO NAIPE; 
+	-FULL HOUSE: THREE OF A KIND + PAIR;
+	-FOUR OF A KIND/QUADS: 4 CARTAS IGUAIS;
+	-STRAIGHT FLUSH: 5 CARTAS DO MESMO NAIPE ORDENADAS;
+	-ROYAL FLUSH: 5 CARTAS DO MESMO NAIPE COM VALORES 10, J, Q, K, A;
 

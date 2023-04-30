@@ -49,7 +49,6 @@ class TexasEvaluator:
         for rank in ranks:
             if ranks.count(rank) == 2:
                 return True
-
         return False
 
     @staticmethod
@@ -89,8 +88,4 @@ class TexasEvaluator:
         for rank in ranks:
             if ranks.count(rank) == 2:
                 return True
-        return False
-
-    @staticmethod
-    def is_highest_card(cards: List[TexasCard]) -> bool:
         return False

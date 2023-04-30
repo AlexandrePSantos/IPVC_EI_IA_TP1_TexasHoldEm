@@ -73,8 +73,6 @@ class TexasState(State):
                 print(f"> Community cards: {self.__community_cards}")
 
         oth_player = 1 if self.__acting_player == 0 else 0
-        # print(self.__sequence)
-
         # if someone is betting, we are going to increase its bet amount
         if action == TexasAction.CALL:
             self.__bets[self.__acting_player] = self.__bets[oth_player]
@@ -86,8 +84,9 @@ class TexasState(State):
 
     # DISPLAY
     def display(self):
-        print(f": Pot = {self.get_pot()}")
-        print(f": Bets = {self.get_bets()}\n")
+        print(f"> Hands = {self.get_current_hands()}")
+        print(f"> Pot = {self.get_pot()}")
+        print(f"> Bets = {self.get_bets()}")
 
     def get_pot(self):
         return sum(self.__bets)
@@ -102,8 +101,8 @@ class TexasState(State):
         cloned.__sequence = self.__sequence.copy()
         cloned.__is_finished = self.__is_finished
         cloned.__acting_player = self.__acting_player
-        for i in range(0, len(self.__hands)):
-            cloned.__hands[i] = self.__hands[i]
+        for i, hand in enumerate(self.__hands):
+            cloned.__hands[i] = hand.copy()
         cloned.__is_showdown = self.__is_showdown
         return cloned
 
@@ -157,25 +156,19 @@ class TexasState(State):
         # hand cards
         parsed_hands = []
         for i, hand in enumerate(self.__hands):
-            # print(f"hand {i}: {hand}")
             parsed_hand = []
             for card_str in hand:
-                # print(f"card_str: {card_str}")
                 card_str = str(card_str)
                 rank_str = card_str[:-1]
-                # print(f"rank_str: {rank_str}")
                 suit_str = card_str[-1]
-                # print(f"suit_str: {suit_str}")
                 rank = Rank(int(rank_str))
                 suit = Suit(suit_str)
                 card = TexasCard(rank, suit)
                 parsed_hand.append(card)
-            # print(f"parsed_hand {i}: {parsed_hand}")
             if parsed_hand not in parsed_hands:
                 parsed_hands.append(parsed_hand)
         self.__parsed_hands_no_comm = parsed_hands
         self.__parsed_hands = parsed_hands
-        # print(f"parsed_hands: {self.__parsed_hands}")
         # community cards
         parsed_community_cards = []
         for card_str in self.__community_cards:
@@ -191,7 +184,6 @@ class TexasState(State):
                 parsed_community_cards.append(card)
         self.__parsed_hands[0] += parsed_community_cards
         self.__parsed_hands[1] += parsed_community_cards
-        return self.__parsed_hands
 
     def calculate_hand_value(self):
         self.parse_hands()
@@ -215,5 +207,4 @@ class TexasState(State):
             for i, rank in enumerate(max_card_ranks):
                 if rank == max_rank:
                     hand_values[i] += 0.1
-        # print(hand_values)
         return hand_values
