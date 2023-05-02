@@ -10,7 +10,7 @@ class CFREasyTexasPlayer(TexasPlayer):
     def __init__(self, name):
         super().__init__(name)
         self.__trainer = TexasTrainer()
-        self.__trainer.train(100000)
+        self.__trainer.train(100)
 
     def get_action(self, state: TexasState):
         info_set = f"{self.get_current_card()}"
