@@ -61,31 +61,27 @@ class TexasState(State):
 
         if action == TexasAction.CALL or action == TexasAction.RAISE or action == TexasAction.PASS:
             if len(self.__sequence) == 8:
-                self.__is_finished = True
-                self.__is_showdown = True
+                self.__is_finished, self.__is_showdown = True, True
             elif len(self.__sequence) == 6:      # fourth round (river)
                 print(f"\n> Round 4 - River <")
                 self.__community_cards[4] = self.__deck.pop()
-                self.__combined_hc_cc = self.combine_cards()
-                self.__hand_values = evaluate.calculate_hand_value(self.__combined_hc_cc)
+                self.calculate()
             elif len(self.__sequence) == 4:    # third round (turn)
                 print(f"\n> Round 3 - Turn <")
                 self.__community_cards[3] = self.__deck.pop()
-                self.__combined_hc_cc = self.combine_cards()
-                self.__hand_values = evaluate.calculate_hand_value(self.__combined_hc_cc)
+                self.calculate()
             elif len(self.__sequence) == 2:    # second round (flop)
                 print(f"\n> Round 2 - Flop <")
                 for i in range(3):
                     if self.__community_cards[i] is None:
                         self.__community_cards[i] = self.__deck.pop()
-                self.__combined_hc_cc = self.combine_cards()
-                self.__hand_values = evaluate.calculate_hand_value(self.__combined_hc_cc)
+                self.calculate()
 
         oth_player = 1 if self.__acting_player == 0 else 0
         # if someone is betting, we are going to increase its bet amount
         if action == TexasAction.CALL:
             self.__bets[self.__acting_player] = self.__bets[oth_player]
-        if action == TexasAction.RAISE:
+        elif action == TexasAction.RAISE:
             self.__bets[self.__acting_player] = self.__bets[oth_player] + 1
 
         # swap the player
@@ -158,7 +154,7 @@ class TexasState(State):
     def get_sequence(self):
         return self.__sequence
 
-    # # COMBINE HANDS WITH COMMUNITY CARDS
+    # COMBINE HANDS WITH COMMUNITY CARDS
     def combine_cards(self) -> List[List[TexasCard]]:
         combined_hc_cc = []
         for hand in self.__hands:
@@ -166,3 +162,7 @@ class TexasState(State):
             combined_hc_cc.append(combined_hand)
         self.__combined_hc_cc = combined_hc_cc
         return combined_hc_cc
+
+    def calculate(self):
+        self.__combined_hc_cc = self.combine_cards()
+        self.__hand_values = evaluate.calculate_hand_value(self.__combined_hc_cc)

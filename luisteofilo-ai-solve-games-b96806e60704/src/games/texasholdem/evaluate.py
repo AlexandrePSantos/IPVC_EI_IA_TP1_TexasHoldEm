@@ -91,7 +91,7 @@ class TexasEvaluator:
                 return True
         return False
 
-    # CALCULAR HAND VALUES
+    # CALCULAR HAND VALUES (BOTH PLAYERS)
     @staticmethod
     def calculate_hand_value(cards):
         __combined_cards = cards
