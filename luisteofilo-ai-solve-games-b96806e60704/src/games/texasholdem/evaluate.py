@@ -4,6 +4,7 @@ from games.texasholdem.card import Rank, Suit, TexasCard
 
 
 class TexasEvaluator:
+    # RANKINGS
     @staticmethod
     def is_royal_flush(cards: List[TexasCard]) -> bool:
         suits = set(card.suit for card in cards)
@@ -89,3 +90,27 @@ class TexasEvaluator:
             if ranks.count(rank) == 2:
                 return True
         return False
+
+    # CALCULAR HAND VALUES
+    @staticmethod
+    def calculate_hand_value(cards):
+        __combined_cards = cards
+        hand_values = []
+        for hand in __combined_cards:
+            hand_values.append(10 if TexasEvaluator.is_royal_flush(hand) else
+                               9 if TexasEvaluator.is_straight_flush(hand) else
+                               8 if TexasEvaluator.is_four_of_a_kind(hand) else
+                               7 if TexasEvaluator.is_full_house(hand) else
+                               6 if TexasEvaluator.is_flush(hand) else
+                               5 if TexasEvaluator.is_straight(hand) else
+                               4 if TexasEvaluator.is_three_of_a_kind(hand) else
+                               3 if TexasEvaluator.is_two_pair(hand) else
+                               2 if TexasEvaluator.is_pair(hand) else
+                               1)
+        if len(set(hand_values)) == 1:
+            max_card_ranks = [max(hand[:2], key=lambda c: c.rank.value).rank.value for hand in __combined_cards]
+            max_rank = max(max_card_ranks)
+            for i, rank in enumerate(max_card_ranks):
+                if rank == max_rank:
+                    hand_values[i] += 0.1
+        return hand_values

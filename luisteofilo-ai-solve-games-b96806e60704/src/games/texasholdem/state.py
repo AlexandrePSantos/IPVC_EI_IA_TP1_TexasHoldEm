@@ -4,6 +4,8 @@ from games.texasholdem.evaluate import TexasEvaluator
 from games.state import State
 from typing import List
 
+evaluate = TexasEvaluator()
+
 
 class TexasState(State):
 
@@ -64,17 +66,20 @@ class TexasState(State):
             elif len(self.__sequence) == 6:      # fourth round (river)
                 print(f"\n> Round 4 - River <")
                 self.__community_cards[4] = self.__deck.pop()
-                self.__hand_values = self.calculate_hand_value()
+                self.__combined_hc_cc = self.combine_cards()
+                self.__hand_values = evaluate.calculate_hand_value(self.__combined_hc_cc)
             elif len(self.__sequence) == 4:    # third round (turn)
                 print(f"\n> Round 3 - Turn <")
                 self.__community_cards[3] = self.__deck.pop()
-                self.__hand_values = self.calculate_hand_value()
+                self.__combined_hc_cc = self.combine_cards()
+                self.__hand_values = evaluate.calculate_hand_value(self.__combined_hc_cc)
             elif len(self.__sequence) == 2:    # second round (flop)
                 print(f"\n> Round 2 - Flop <")
                 for i in range(3):
                     if self.__community_cards[i] is None:
                         self.__community_cards[i] = self.__deck.pop()
-                self.__hand_values = self.calculate_hand_value()
+                self.__combined_hc_cc = self.combine_cards()
+                self.__hand_values = evaluate.calculate_hand_value(self.__combined_hc_cc)
 
         oth_player = 1 if self.__acting_player == 0 else 0
         # if someone is betting, we are going to increase its bet amount
@@ -153,7 +158,7 @@ class TexasState(State):
     def get_sequence(self):
         return self.__sequence
 
-    # # COMBINAR HANDS COM COMMUNITY CARDS
+    # # COMBINE HANDS WITH COMMUNITY CARDS
     def combine_cards(self) -> List[List[TexasCard]]:
         combined_hc_cc = []
         for hand in self.__hands:
@@ -161,26 +166,3 @@ class TexasState(State):
             combined_hc_cc.append(combined_hand)
         self.__combined_hc_cc = combined_hc_cc
         return combined_hc_cc
-
-    # CALCULAR HAND VALUES
-    def calculate_hand_value(self):
-        self.__combined_hc_cc = self.combine_cards()
-        hand_values = []
-        for hand in self.__combined_hc_cc:
-            hand_values.append(10 if TexasEvaluator.is_royal_flush(hand) else
-                               9 if TexasEvaluator.is_straight_flush(hand) else
-                               8 if TexasEvaluator.is_four_of_a_kind(hand) else
-                               7 if TexasEvaluator.is_full_house(hand) else
-                               6 if TexasEvaluator.is_flush(hand) else
-                               5 if TexasEvaluator.is_straight(hand) else
-                               4 if TexasEvaluator.is_three_of_a_kind(hand) else
-                               3 if TexasEvaluator.is_two_pair(hand) else
-                               2 if TexasEvaluator.is_pair(hand) else
-                               1)
-        if len(set(hand_values)) == 1:
-            max_card_ranks = [max(hand[:2], key=lambda c: c.rank.value).rank.value for hand in self.__combined_hc_cc]
-            max_rank = max(max_card_ranks)
-            for i, rank in enumerate(max_card_ranks):
-                if rank == max_rank:
-                    hand_values[i] += 0.1
-        return hand_values

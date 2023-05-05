@@ -1,8 +1,5 @@
 from random import shuffle
-from deuces import Card, Evaluator
 from games.texasholdem.card import Rank, Suit, TexasCard
-
-evaluator = Evaluator()
 
 
 class TexasTrainer:
