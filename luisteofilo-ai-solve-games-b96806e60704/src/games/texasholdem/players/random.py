@@ -11,8 +11,8 @@ class RandomTexasPlayer(TexasPlayer):
     def __init__(self, name):
         super().__init__(name)
 
-    @staticmethod
-    def get_action(state: TexasState):
+    def get_action(self, state: TexasState):
+        print(f"\n> Player {self.get_current_pos() + 1} with hand {self.get_current_hand()}")
         state.display()
         return choice([TexasAction.CALL, TexasAction.RAISE, TexasAction.PASS])
 

@@ -1,4 +1,6 @@
 FINAL
-.Para empates usar omaha tiebreaker
+.Para empates usar tiebreaker que analisa strength dos rankings
 .CFR (árvore curta) -> dificuldade baixa
 .CFR (árvore longa) -> dificuldade alta
+
+
