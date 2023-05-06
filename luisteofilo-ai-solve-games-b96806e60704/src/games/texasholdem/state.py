@@ -39,7 +39,7 @@ class TexasState(State):
     def get_community_cards(self):
         return self.__community_cards
 
-    def get_combined_cards(self, pos):
+    def get_combined_cards(self):
         return self.__combined_hc_cc
 
     def get_combined_cards1(self):

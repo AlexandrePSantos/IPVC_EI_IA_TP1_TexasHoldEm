@@ -114,3 +114,28 @@ class TexasEvaluator:
                 if rank == max_rank:
                     hand_values[i] += 0.1
         return hand_values
+
+    @staticmethod
+    def single_hand_value(cards):
+        hand = cards
+        if TexasEvaluator.is_royal_flush(hand):
+            value = 10
+        elif TexasEvaluator.is_straight_flush(hand):
+            value = 9
+        elif TexasEvaluator.is_four_of_a_kind(hand):
+            value = 8
+        elif TexasEvaluator.is_full_house(hand):
+            value = 7
+        elif TexasEvaluator.is_flush(hand):
+            value = 6
+        elif TexasEvaluator.is_straight(hand):
+            value = 5
+        elif TexasEvaluator.is_three_of_a_kind(hand):
+            value = 4
+        elif TexasEvaluator.is_two_pair(hand):
+            value = 3
+        elif TexasEvaluator.is_pair(hand):
+            value = 2
+        else:
+            value = 1
+        return value

@@ -1,25 +1,32 @@
-draw hands
+!------------------!
+!-> FLOW DO JOGO <-!
+!------------------!
 
-player 0 -> blind: 10
-player 1 -> Bblind: 11 (maior obrigatoriamente)
+!-> PRE-FLOP <-!
+deal hands (2 cards per player)
+initial betting round
+player 1 -> small blind: 1
+player 2 -> big blind: 2
 
-entram community cards (3 na mesa)
-
+!-> FLOP <-!
+deal community cards (3 na mesa)
 betting round
 
-add community card (4 na mesa)
-
+!-> TURN <-!
+deal community card (4 na mesa)
 betting round
 
-add community card (5 na mesa)
-
+!-> RIVER <-!
+deal community card (5 na mesa)
 betting round
 
-Showdown (revelar mãos)
+!-> SHOWDOWN <-!
+evaluate hands -> pay the winner
 
-Evaluate -> definir o vencedor
+!------------------!
+!->   CLASSES    <-!
+!------------------!
 
-----------\\---------
 --> action.py: <--
 ações possiveis no jogo
 

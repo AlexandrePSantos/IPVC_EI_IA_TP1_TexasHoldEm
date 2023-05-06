@@ -5,8 +5,8 @@ from games.texasholdem.players.random import RandomTexasPlayer
 from games.texasholdem.players.always_call import AlwaysCallTexasHoldEmPlayer
 from games.texasholdem.players.always_raise import AlwaysRaiseTexasHoldEmPlayer
 from games.texasholdem.players.always_pass import AlwaysPassTexasHoldEmPlayer
-from games.texasholdem.players.cfr_easy import CFREasyTexasPlayer
-from games.texasholdem.players.cfr_hard import CFRHardTexasPlayer
+from games.texasholdem.players.greedy_n_trained import GreedyBasicTexasPlayer
+from games.texasholdem.players.greedy_trained import GreedyTrainedTexasPlayer
 from games.texasholdem.simulator import TexasSimulator
 
 
@@ -24,7 +24,8 @@ def run_simulation(desc: str, simulator: GameSimulator, iterations: int):
 
 def player_type():
     print(f"\n> Player types <")
-    print(f"1 - Human\n2 - Always Call\n3 - Always Raise\n4 - Always Pass\n5 - Random\n6 - CFR Easy\n7 - CFR Hard")
+    print(f"1 - Human\n2 - Always Call\n3 - Always Raise\n4 - Always Pass\n"
+          f"5 - Random\n6 - Greedy n/Trained\n7 - Greedy Trained")
 
 
 def main():
@@ -48,9 +49,9 @@ def main():
     elif p1 == 5:
         player1, name1 = RandomTexasPlayer, "Random"
     elif p1 == 6:
-        player1, name1 = CFREasyTexasPlayer, "CFR Easy"
+        player1, name1 = GreedyBasicTexasPlayer, "Greedy n/Trained"
     elif p1 == 7:
-        player1, name1 = CFRHardTexasPlayer, "CFR Hard"
+        player1, name1 = GreedyTrainedTexasPlayer, "Greedy Trained"
 
     p2 = int(input("Chose player 2: "))
     if p2 == 1:
@@ -64,9 +65,9 @@ def main():
     elif p2 == 5:
         player2, name2 = RandomTexasPlayer, "Random"
     elif p2 == 6:
-        player2, name2 = CFREasyTexasPlayer, "CFR Easy"
+        player2, name2 = GreedyBasicTexasPlayer, "Greedy n/Trained"
     elif p2 == 7:
-        player2, name2 = CFRHardTexasPlayer, "CFR Hard"
+        player2, name2 = GreedyTrainedTexasPlayer, "Greedy Trained"
 
     """ SIMULATIONS """
     tex_simulations = [{"name": "Texas Hold'Em", "player1": player1(name1 + " 1"), "player2": player2(name2 + " 2")}]
