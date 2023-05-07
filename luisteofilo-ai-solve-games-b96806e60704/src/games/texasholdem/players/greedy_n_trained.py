@@ -13,8 +13,8 @@ class GreedyBasicTexasPlayer(TexasPlayer):
         super().__init__(name)
 
     def get_action(self, state: TexasState):
-        print(f"\n> Player {self.get_current_pos() + 1} with hand {self.get_current_hand()}")
-        state.display()
+        # print(f"\n> Player {self.get_current_pos() + 1} with hand {self.get_current_hand()}")
+        # state.display()
         cards = []
         if len(state.get_combined_cards()) > 0:
             if self.get_current_pos() == 0:

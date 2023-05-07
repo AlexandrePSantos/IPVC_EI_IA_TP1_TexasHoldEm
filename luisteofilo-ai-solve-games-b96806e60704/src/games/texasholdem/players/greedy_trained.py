@@ -51,7 +51,6 @@ class GreedyTrainedTexasPlayer(TexasPlayer):
 
             # Store the updated Q-value in the Q-table
             self.Q_table[state_key] = q_value
-        pass
 
     def get_state_key(self, state: State):
         # Extract relevant features from the state
