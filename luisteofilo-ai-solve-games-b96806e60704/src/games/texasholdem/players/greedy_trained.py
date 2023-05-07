@@ -1,60 +1,67 @@
-import random
-
 from games.texasholdem.action import TexasAction
 from games.texasholdem.player import TexasPlayer
 from games.texasholdem.state import TexasState
 from games.state import State
+import random
 
 
 class GreedyTrainedTexasPlayer(TexasPlayer):
     def __init__(self, name):
         super().__init__(name)
-        self.file_path = "\luisteofilo-ai-solve-games-b96806e60704\src\games\texasholdem\greedy_training"
         self.Q_table = {}
+        self.visited_states = []
         self.epsilon = 0.1
-        self.load_q_table()
+        self.alpha = 0.5
+        self.gamma = 0.9
 
     def get_action(self, state: TexasState):
-        state_key = state.get_state_key(self.get_current_pos())
+        state_key = self.get_state_key(state)
 
         # Choose action with highest Q-value
         if state_key in self.Q_table and random.random() > self.epsilon:
             action = max(self.Q_table[state_key], key=self.Q_table[state_key].get)
         else:
-            action = random.choice(state.get_legal_actions(self.get_current_pos()))
-
+            action = random.choice([TexasAction.PASS, TexasAction.CALL, TexasAction.RAISE])
+        self.visited_states.append((state_key, action))
         return action
 
     def event_action(self, pos: int, action, new_state: State):
-        # Update Q-table based on new state
-        old_state_key = new_state.get_previous_state_key(pos)
-        new_state_key = new_state.get_state_key(pos)
-        reward = new_state.get_reward(pos)
-        alpha = 0.5
-        gamma = 0.9
-        if old_state_key in self.Q_table and new_state_key in self.Q_table[old_state_key]:
-            max_q = max(self.Q_table[new_state_key].values())
-            self.Q_table[old_state_key][action] += alpha * (reward + gamma * max_q - self.Q_table[old_state_key][action])
-
-        self.save_q_table()
-
-    def event_end_game(self, final_state: State):
         # ignore
         pass
 
-    def load_q_table(self):
-        try:
-            with open(self.file_path, 'r') as f:
-                for line in f:
-                    state, action, value = line.strip().split(',')
-                    if state not in self.Q_table:
-                        self.Q_table[state] = {}
-                    self.Q_table[state][int(action)] = float(value)
-        except FileNotFoundError:
-            print(f"No Q-table file found at {self.file_path}, creating a new file")
+    def event_end_game(self, final_state: State):
+        # Calculate the final reward
+        reward = final_state.get_pot()
 
-    def save_q_table(self):
-        with open(self.file_path, 'w') as f:
-            for state, values in self.Q_table.items():
-                for action, value in values.items():
-                    f.write(f"{state},{action},{value}\n")
+        # Iterate over all state-action pairs encountered during the game
+        for state_key, action in self.visited_states:
+            # Calculate the estimated value of the next state
+            next_state_key = self.get_state_key(final_state)
+            next_state_value = self.Q_table.get(next_state_key,
+                                                {TexasAction.PASS: 0, TexasAction.CALL: 0, TexasAction.RAISE: 0})
+            next_state_max_value = max(next_state_value.values())
+
+            # Retrieve the Q-value for the current state-action pair
+            q_value = self.Q_table.get(state_key, {TexasAction.PASS: 0, TexasAction.CALL: 0, TexasAction.RAISE: 0})
+            old_value = q_value[action]
+
+            # Update the Q-value based on the Bellman equation
+            new_value = old_value + self.alpha * (reward + self.gamma * next_state_max_value - old_value)
+            q_value[action] = new_value
+
+            # Store the updated Q-value in the Q-table
+            self.Q_table[state_key] = q_value
+        pass
+
+    def get_state_key(self, state: State):
+        # Extract relevant features from the state
+        player_pos = str(self.get_current_pos())
+        community_cards = [card for card in state.get_community_cards() if card is not None]
+        community_cards_str = ','.join(map(str, community_cards))
+
+        player_hand = ','.join(map(str, state.get_current_hands()[int(player_pos)]))
+
+        # Combine the features into a string representation of the state
+        state_key = f"{player_pos},{community_cards_str},{player_hand}"
+
+        return state_key

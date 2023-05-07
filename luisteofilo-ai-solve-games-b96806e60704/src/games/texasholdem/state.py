@@ -63,15 +63,12 @@ class TexasState(State):
             if len(self.__sequence) == 8:
                 self.__is_finished, self.__is_showdown = True, True
             elif len(self.__sequence) == 6:      # fourth round (river)
-                print(f"\n> Round 4 - River <")
                 self.__community_cards[4] = self.__deck.pop()
                 self.calculate()
             elif len(self.__sequence) == 4:    # third round (turn)
-                print(f"\n> Round 3 - Turn <")
                 self.__community_cards[3] = self.__deck.pop()
                 self.calculate()
             elif len(self.__sequence) == 2:    # second round (flop)
-                print(f"\n> Round 2 - Flop <")
                 for i in range(3):
                     if self.__community_cards[i] is None:
                         self.__community_cards[i] = self.__deck.pop()

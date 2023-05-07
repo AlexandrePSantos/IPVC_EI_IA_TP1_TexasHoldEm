@@ -14,8 +14,7 @@ def run_simulation(desc: str, simulator: GameSimulator, iterations: int):
     print(f"\n----- {desc} -----")
 
     for i in range(iterations):
-        print(f"Game nº{i + 1}\n")
-        print(f"> Round 1 - Pre Flop <")
+        print(f"Game nº{i + 1}")
         simulator.run_simulation()
 
     print(f"\nResults for the game:")
