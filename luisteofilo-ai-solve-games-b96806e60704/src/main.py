@@ -14,7 +14,7 @@ def run_simulation(desc: str, simulator: GameSimulator, iterations: int):
     print(f"\n----- {desc} -----")
 
     for i in range(iterations):
-        print(f"Game nº{i + 1}")
+        # print(f"Game nº{i + 1}")
         simulator.run_simulation()
 
     print(f"\nResults for the game:")

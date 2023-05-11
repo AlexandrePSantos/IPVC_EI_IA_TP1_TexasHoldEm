@@ -31,3 +31,15 @@ class TexasCard:
 
     def __repr__(self):
         return f"{self.rank.value}{self.suit.value}"
+
+    def __str__(self):
+        rank = self.rank.value if self.rank.value < 10 else {
+            10: "T",
+            11: "J",
+            12: "Q",
+            13: "K",
+            14: "A"
+        }[self.rank.value]
+        return f"{rank}{self.suit.value}"
+
+

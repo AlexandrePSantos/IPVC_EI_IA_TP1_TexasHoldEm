@@ -31,3 +31,27 @@ RULES -> TEXAS HOLD'EM:
 	-STRAIGHT FLUSH: 5 CARTAS DO MESMO NAIPE ORDENADAS;
 	-ROYAL FLUSH: 5 CARTAS DO MESMO NAIPE COM VALORES 10, J, Q, K, A;
 
+!------------------!
+!-> FLOW DO JOGO <-!
+!------------------!
+
+!-> PRE-FLOP <-!
+deal hands (2 cards per player)
+initial betting round
+player 1 -> small blind: 1
+player 2 -> big blind: 2
+
+!-> FLOP <-!
+deal community cards (3 na mesa)
+betting round
+
+!-> TURN <-!
+deal community card (4 na mesa)
+betting round
+
+!-> RIVER <-!
+deal community card (5 na mesa)
+betting round
+
+!-> SHOWDOWN <-!
+evaluate hands -> pay the winner
